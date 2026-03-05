@@ -41,7 +41,7 @@ services:
       NODE_ENV: development
       PORT: 4000
       DATABASE_URL: postgresql://mtm:mtm@db:5432/mtm
-    command: npm run start:dev
+    command: sh -c "npm ci && npx prisma generate && npm run start:dev"
     depends_on:
       db:
         condition: service_healthy

@@ -6,7 +6,7 @@ Application metier pour food-truck: POS, KDS, stock, recettes/marges, CRM, sessi
 - Frontend React + TypeScript + Vite
 - Persistance locale via `localStorage`
 - Mode stand-alone mono-appareil
-- Aucune API backend ni base distante a ce stade
+- Backend NestJS initialise (base `api`) + PostgreSQL Docker + Prisma migrate
 
 Cadre projet: voir [AGENTS.md](./AGENTS.md).
 
@@ -29,6 +29,7 @@ Cadre projet: voir [AGENTS.md](./AGENTS.md).
 2. Ouvrir:
    `http://localhost:3000`
    `http://localhost:4000/api` (backend)
+   `http://localhost:4000/api/health` (health check DB)
 3. Arreter:
    `docker compose --profile dev --profile backend down`
 
@@ -38,6 +39,7 @@ Cadre projet: voir [AGENTS.md](./AGENTS.md).
 2. Ouvrir:
    `http://localhost:4173`
    `http://localhost:4001/api` (backend)
+   `http://localhost:4001/api/health` (health check DB)
 3. Arreter:
    `docker compose --profile prod --profile backend down`
 
@@ -69,7 +71,6 @@ Cadre projet: voir [AGENTS.md](./AGENTS.md).
 - Les changements doivent rester incrementaux et testables.
 
 ## Prochaines Priorites
-1. Data Safety: export/import JSON + backup a la cloture
-2. Robustesse terrain: scenarios critiques POS/KDS/session
-3. Dockerisation frontend
-4. Preparation backend + base de donnees
+1. Definir et implementer BL-014: contrats API prioritaires (auth/products/orders/inventory/customers)
+2. Ajouter couche data adapter cote frontend (localStorage/api) pour transition progressive
+3. Preparer plan de migration localStorage vers DB avec rollback operationnel
