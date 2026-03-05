@@ -1,0 +1,85 @@
+services:
+  frontend:
+    container_name: mtm_frontend_dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    command: npm run dev -- --host 0.0.0.0 --port 3000
+    profiles: ["dev"]
+    depends_on:
+      - api
+
+  frontend_prod:
+    container_name: mtm_frontend_prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173"
+    environment:
+      NODE_ENV: production
+    profiles: ["prod"]
+
+  api:
+    container_name: mtm_api_dev
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_URL: postgresql://mtm:mtm@db:5432/mtm
+    command: npm run start:dev
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ["dev", "backend"]
+
+  api_prod:
+    container_name: mtm_api_prod
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://mtm:mtm@db:5432/mtm
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ["prod", "backend"]
+
+  db:
+    container_name: mtm_db
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: mtm
+      POSTGRES_PASSWORD: mtm
+      POSTGRES_DB: mtm
+    volumes:
+      - mtm_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mtm -d mtm"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    profiles: ["dev", "prod", "backend"]
+
+volumes:
+  mtm_db_data:
