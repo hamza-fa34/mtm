@@ -25,4 +25,4 @@
 | BL-016 | P4 | Plan migration localStorage -> DB + rollback | M | BL-013, BL-015 | TODO |
 
 ## Prochaine Action Recommandee
-- Poursuivre `BL-014` avec `orders` et `inventory`, puis ajouter `auth` (JWT) avant bascule frontend.
+- Poursuivre `BL-014` avec `customers` et `auth` (JWT), puis brancher un data adapter frontend `api/local`.

@@ -58,6 +58,10 @@ Cadre projet: voir [AGENTS.md](./AGENTS.md).
 - `GET /api/categories`
 - `GET /api/products`
 - `GET /api/settings`
+- `GET /api/orders`
+- `GET /api/inventory/ingredients`
+- `GET /api/inventory/purchases`
+- `GET /api/inventory/wastes`
 
 ## Donnees et Sauvegarde
 - Les donnees sont stockees en local dans le navigateur (`localStorage`).
