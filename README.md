@@ -62,6 +62,14 @@ Cadre projet: voir [AGENTS.md](./AGENTS.md).
 - `GET /api/inventory/ingredients`
 - `GET /api/inventory/purchases`
 - `GET /api/inventory/wastes`
+- `GET /api/customers`
+
+## Endpoints Auth (JWT)
+- `POST /api/auth/login` body: `{ "pin": "1234" }`
+- `POST /api/auth/refresh` body: `{ "refreshToken": "<token>" }`
+- `GET /api/auth/me` header: `Authorization: Bearer <accessToken>`
+
+Note: `login` exige des utilisateurs actifs en base (`User`) avec `pinHash` renseigne.
 
 ## Donnees et Sauvegarde
 - Les donnees sont stockees en local dans le navigateur (`localStorage`).
