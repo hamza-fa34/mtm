@@ -20,9 +20,9 @@
 | BL-011 | P3 | Dockerfile frontend (dev + prod) | M | P0/P1 OK | DONE |
 | BL-012 | P3 | docker-compose minimal + doc usage | M | BL-011 | DONE |
 | BL-013 | P4 | Modele de donnees cible PostgreSQL | L | P0/P1 stabilises | DONE |
-| BL-014 | P4 | Contrats API prioritaires (auth/orders/products/inventory/customers) | L | BL-013 | TODO |
+| BL-014 | P4 | Contrats API prioritaires (auth/orders/products/inventory/customers) | L | BL-013 | IN_PROGRESS |
 | BL-015 | P4 | Couche abstraction data (local/api) | L | BL-014 | TODO |
 | BL-016 | P4 | Plan migration localStorage -> DB + rollback | M | BL-013, BL-015 | TODO |
 
 ## Prochaine Action Recommandee
-- Demarrer `BL-014` (contrats API prioritaires) avec un premier lot read-only (`products`, `categories`, `settings`).
+- Poursuivre `BL-014` avec `orders` et `inventory`, puis ajouter `auth` (JWT) avant bascule frontend.

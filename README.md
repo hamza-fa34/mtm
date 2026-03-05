@@ -53,6 +53,12 @@ Cadre projet: voir [AGENTS.md](./AGENTS.md).
 - `npm run preview`: previsualisation du build
 - `npm run quality:ci`: gate qualite local (`typecheck + tests + build`)
 
+## Endpoints API Disponibles (V0 read-only)
+- `GET /api/health`
+- `GET /api/categories`
+- `GET /api/products`
+- `GET /api/settings`
+
 ## Donnees et Sauvegarde
 - Les donnees sont stockees en local dans le navigateur (`localStorage`).
 - La sauvegarde/restauration globale JSON est planifiee en priorite `P0` (voir `AGENTS.md`).
