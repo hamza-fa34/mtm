@@ -27,9 +27,7 @@
     "noEmit": true
   },
   "exclude": [
-    "api",
     "dist",
-    "node_modules",
-    "migrated_prompt_history"
+    "node_modules"
   ]
 }
