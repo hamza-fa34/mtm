@@ -53,10 +53,10 @@ Checklist:
 Objectif: stabiliser lecture API customers sans casser CRM/fidelite locale
 
 Checklist:
-- [ ] Verifier mapping `loyaltyPoints`, `lastVisit`
-- [ ] Verifier creation client locale toujours fonctionnelle
-- [ ] Tester API vide/KO -> fallback local
-- [ ] Valider `npm run quality:ci`
+- [x] Verifier mapping `loyaltyPoints`, `lastVisit`
+- [x] Verifier creation client locale toujours fonctionnelle
+- [x] Tester API vide/KO -> fallback local
+- [x] Valider `npm run quality:ci`
 - [ ] Commit: `feat(front): harden customers adapter migration`
 - [ ] Push `origin/main`
 
