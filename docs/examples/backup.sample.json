@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "v1-standalone",
+  "generatedAt": "2026-03-06T00:00:00.000Z",
+  "app": "Molly's Truck Manager",
+  "reason": "sample",
+  "keys": {
+    "molls_settings": {
+      "name": "Molly's Truck",
+      "slogan": "Fresh & Fast",
+      "tvaEmporter": 10,
+      "tvaPlace": 10
+    },
+    "molls_users": [
+      { "id": "usr_manager_sample", "name": "Manager Sample", "pin": "1234", "role": "MANAGER" },
+      { "id": "usr_staff_sample", "name": "Staff Sample", "pin": "0000", "role": "STAFF" }
+    ],
+    "molls_categories": [],
+    "molls_products": [],
+    "molls_ingredients": [],
+    "molls_purchases": [],
+    "molls_wastes": [],
+    "molls_customers": [],
+    "molls_orders": [],
+    "molls_current_session": null,
+    "molls_sessions_history": [],
+    "molls_expenses": []
+  }
+}
+

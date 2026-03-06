@@ -21,7 +21,9 @@
     "prisma:validate": "prisma validate",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy"
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "migration:import:dry-run": "node scripts/import-local-backup.cjs --dry-run",
+    "migration:import:apply": "node scripts/import-local-backup.cjs --apply"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

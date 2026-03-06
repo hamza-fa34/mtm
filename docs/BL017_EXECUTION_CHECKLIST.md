@@ -19,7 +19,7 @@
 | L2 | Inventory write transactionnel | IN_PROGRESS | NO-GO |
 | L3 | Sessions / End-of-Day transactionnel | IN_PROGRESS | NO-GO |
 | L4 | Auth/roles backend stricts | IN_PROGRESS | NO-GO |
-| L5 | Migration reelle local -> DB (cutover controle) | TODO | NO-GO |
+| L5 | Migration reelle local -> DB (cutover controle) | IN_PROGRESS | NO-GO |
 | L6 | Tests integration + E2E critiques | TODO | NO-GO |
 | L7 | CI/CD minimale pro + observabilite + runbooks | TODO | NO-GO |
 
@@ -74,12 +74,12 @@
 
 ## L5 - Migration reelle local -> DB
 ### Checklist
-- [ ] Script/import migration depuis export JSON
-- [ ] Dry-run migration + rapport d'ecarts
-- [ ] Cutover par domaine (orders/inventory/sessions)
-- [ ] Fallback local seulement en secours controle
-- [ ] Procedure rollback data testee
-- [ ] Commit + push
+- [x] Script/import migration depuis export JSON
+- [x] Dry-run migration + rapport d'ecarts
+- [x] Cutover par domaine (orders/inventory/sessions)
+- [x] Fallback local seulement en secours controle
+- [x] Procedure rollback data testee
+- [x] Commit + push
 ### Critere GO
 - [ ] Donnees historiques et donnees nouvelles coherentes apres cutover
 
