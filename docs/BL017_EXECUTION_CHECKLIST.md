@@ -32,10 +32,12 @@
 - [x] Verification session ouverte obligatoire
 - [x] Verification stock suffisant au moment de la commande
 - [x] Tests integration backend pour succes + echec atomique
+- [ ] Test concurrence: 2 commandes quasi simultanees sur stock limite
 - [ ] Validation manuelle POS -> KDS -> recap
 - [x] Commit + push
 ### Critere GO
 - [ ] Aucune commande incoherente observee sur 10 scenarios critiques
+- [ ] Aucune incoherence stock observee sous concurrence
 
 ## L2 - Inventory write transactionnel
 ### Checklist
@@ -76,6 +78,7 @@
 ### Checklist
 - [x] Script/import migration depuis export JSON
 - [x] Dry-run migration + rapport d'ecarts
+- [ ] Validation sur export JSON realiste (volume metier)
 - [x] Cutover par domaine (orders/inventory/sessions)
 - [x] Fallback local seulement en secours controle
 - [x] Procedure rollback data testee
@@ -87,11 +90,13 @@
 ### Checklist
 - [x] Suite integration backend (Jest + Supertest + DB test)
 - [x] Scenarios E2E critiques front (Playwright)
+- [ ] Test degradation reseau/API indisponible
 - [x] Scenarios manuels metier mis a jour
 - [x] Non-regression POS/KDS/session validee
 - [x] Commit + push
 ### Critere GO
 - [ ] Pipeline tests verte sur tous les flux critiques
+- [ ] Frontend degrade proprement quand API indisponible
 
 ## L7 - CI/CD + Observabilite + Runbooks
 ### Checklist

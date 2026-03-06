@@ -31,13 +31,22 @@ Cadre projet: voir [AGENTS.md](./AGENTS.md).
 ## Lancement Docker
 ### Mode developpement
 1. Construire et demarrer:
-   `docker compose --profile dev --profile backend up --build`
+   `docker compose --profile fullstack up --build -d`
+   (equivalent historique: `docker compose --profile dev --profile backend up --build -d`)
 2. Ouvrir:
    `http://localhost:3000`
    `http://localhost:4000/api` (backend)
    `http://localhost:4000/api/health` (health check DB)
 3. Arreter:
-   `docker compose --profile dev --profile backend down`
+   `docker compose --profile fullstack down`
+
+### API + DB seulement (sans frontend)
+1. Construire et demarrer:
+   `docker compose --profile backend up --build -d`
+2. Ouvrir:
+   `http://localhost:4000/api`
+3. Arreter:
+   `docker compose --profile backend down`
 
 ### Mode production (preview)
 1. Construire et demarrer:

@@ -12,7 +12,7 @@ services:
     environment:
       NODE_ENV: development
     command: npm run dev -- --host 0.0.0.0 --port 3000
-    profiles: ["dev"]
+    profiles: ["dev", "fullstack"]
     depends_on:
       - api
 
@@ -45,7 +45,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    profiles: ["dev", "backend"]
+    profiles: ["dev", "backend", "fullstack"]
 
   api_prod:
     container_name: mtm_api_prod
@@ -79,7 +79,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
-    profiles: ["dev", "prod", "backend"]
+    profiles: ["dev", "prod", "backend", "fullstack"]
 
 volumes:
   mtm_db_data:
