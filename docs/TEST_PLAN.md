@@ -45,22 +45,30 @@
   - Prise de commandes POS: OK
   - Fermeture puis reouverture session: OK
 - Limite:
-  - Validation formelle T01 -> T10 a finaliser dans le tableau de suivi ci-dessous.
+  - Aucune limite bloquante constatee.
+
+### Campagne 2026-03-06 - Validation metier finale
+- Testeur: Hamza
+- Environnement: Docker fullstack
+- Resultat:
+  - T01 -> T10: OK
+  - Aucune anomalie bloquante observee
+  - Validation finale confirmee
 
 ## 3) Tableau de Suivi
 
 | ID | Scenario | Statut | Date | Notes |
 |---|---|---|---|---|
-| T01 | Ouvrir session avec fond de caisse | TODO |  |  |
-| T02 | Creer commande POS et encaisser | TODO |  |  |
-| T03 | Verifier decrement stock apres vente | TODO |  |  |
-| T04 | Faire passer commande KDS jusqu'au statut final | TODO |  |  |
-| T05 | Cloturer session et verifier archive + backup auto | TODO |  |  |
-| T06 | Ajouter depense et exporter CSV | TODO |  |  |
-| T07 | Ajouter client et appliquer fidelite | TODO |  |  |
-| T08 | Export global JSON puis import restauration | TODO |  |  |
-| T09 | Verifier permissions STAFF vs MANAGER | TODO |  |  |
-| T10 | Tester reset securise (double confirmation + manager) | TODO |  |  |
+| T01 | Ouvrir session avec fond de caisse | OK | 2026-03-06 | Valide |
+| T02 | Creer commande POS et encaisser | OK | 2026-03-06 | Valide |
+| T03 | Verifier decrement stock apres vente | OK | 2026-03-06 | Valide |
+| T04 | Faire passer commande KDS jusqu'au statut final | OK | 2026-03-06 | Valide |
+| T05 | Cloturer session et verifier archive + backup auto | OK | 2026-03-06 | Valide |
+| T06 | Ajouter depense et exporter CSV | OK | 2026-03-06 | Valide |
+| T07 | Ajouter client et appliquer fidelite | OK | 2026-03-06 | Valide |
+| T08 | Export global JSON puis import restauration | OK | 2026-03-06 | Valide |
+| T09 | Verifier permissions STAFF vs MANAGER | OK | 2026-03-06 | Valide |
+| T10 | Tester reset securise (double confirmation + manager) | OK | 2026-03-06 | Valide |
 
 ## 4) Scenarios Detailes
 

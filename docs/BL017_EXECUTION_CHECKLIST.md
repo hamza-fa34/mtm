@@ -15,7 +15,7 @@
 
 | Lot | Objectif | Statut (`TODO`/`IN_PROGRESS`/`DONE`) | GO/NO-GO |
 |---|---|---|---|
-| L1 | Orders write transactionnel | IN_PROGRESS | NO-GO |
+| L1 | Orders write transactionnel | DONE | GO |
 | L2 | Inventory write transactionnel | DONE | GO |
 | L3 | Sessions / End-of-Day transactionnel | DONE | GO |
 | L4 | Auth/roles backend stricts | DONE | GO |
@@ -36,9 +36,9 @@
 - [x] Validation manuelle POS -> KDS -> recap
 - [x] Commit + push
 ### Critere GO
-- [ ] Aucune commande incoherente observee sur 10 scenarios critiques
+- [x] Aucune commande incoherente observee sur 10 scenarios critiques
 - [x] Aucune incoherence stock observee sous concurrence
-- [ ] Evidence renseignee dans `docs/BL017_L1_10_SCENARIOS_EVIDENCE.md`
+- [x] Evidence renseignee dans `docs/BL017_L1_10_SCENARIOS_EVIDENCE.md`
 
 ## L2 - Inventory write transactionnel
 ### Checklist
@@ -114,7 +114,7 @@
 ---
 
 ## Gate final "Ready for next phase"
-- [ ] L1 a L7 en `DONE`
-- [ ] Aucun `NO-GO` ouvert
-- [ ] Checklist test metier signee (`docs/TEST_PLAN.md` + `docs/BL017_L1_10_SCENARIOS_EVIDENCE.md`)
-- [ ] Decision de passage validee (GO prod-ready phase suivante)
+- [x] L1 a L7 en `DONE`
+- [x] Aucun `NO-GO` ouvert
+- [x] Checklist test metier signee (`docs/TEST_PLAN.md` + `docs/BL017_L1_10_SCENARIOS_EVIDENCE.md`)
+- [x] Decision de passage validee (GO prod-ready phase suivante)
