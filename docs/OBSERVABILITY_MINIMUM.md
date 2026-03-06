@@ -96,3 +96,6 @@ When pre-prod traffic increases, add an optional `observability` Docker profile 
 - Uptime checker
 - Log storage/aggregation
 - Dashboarding
+
+Latest drill evidence:
+- `docs/BL018F_OBSERVABILITY_DRILL_EVIDENCE.md`
