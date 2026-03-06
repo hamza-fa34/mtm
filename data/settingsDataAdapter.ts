@@ -18,18 +18,25 @@ export const DEFAULT_TRUCK_SETTINGS: TruckSettings = {
   tvaPlace: 10,
 };
 
+function safeVat(value: unknown, fallback: number): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
+  if (value < 0) return 0;
+  if (value > 100) return 100;
+  return Number(value.toFixed(2));
+}
+
 function sanitizeTruckSettings(input: Partial<TruckSettings>): TruckSettings {
   return {
-    name: input.name ?? DEFAULT_TRUCK_SETTINGS.name,
-    slogan: input.slogan ?? DEFAULT_TRUCK_SETTINGS.slogan,
-    tvaEmporter:
-      typeof input.tvaEmporter === 'number'
-        ? input.tvaEmporter
-        : DEFAULT_TRUCK_SETTINGS.tvaEmporter,
-    tvaPlace:
-      typeof input.tvaPlace === 'number'
-        ? input.tvaPlace
-        : DEFAULT_TRUCK_SETTINGS.tvaPlace,
+    name:
+      typeof input.name === 'string' && input.name.trim().length > 0
+        ? input.name.trim()
+        : DEFAULT_TRUCK_SETTINGS.name,
+    slogan:
+      typeof input.slogan === 'string'
+        ? input.slogan.trim()
+        : DEFAULT_TRUCK_SETTINGS.slogan,
+    tvaEmporter: safeVat(input.tvaEmporter, DEFAULT_TRUCK_SETTINGS.tvaEmporter),
+    tvaPlace: safeVat(input.tvaPlace, DEFAULT_TRUCK_SETTINGS.tvaPlace),
   };
 }
 

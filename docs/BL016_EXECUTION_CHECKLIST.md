@@ -30,10 +30,10 @@ Checklist:
 Objectif: consolider la bascule settings (deja active) et preparer write API en etape suivante
 
 Checklist:
-- [ ] Verifier mapping complet `TruckSettings` front/back
-- [ ] Valider valeurs par defaut + fallback
-- [ ] Verifier non-regression Sidebar/SettingsView
-- [ ] Valider `npm run quality:ci`
+- [x] Verifier mapping complet `TruckSettings` front/back
+- [x] Valider valeurs par defaut + fallback
+- [x] Verifier non-regression Sidebar/SettingsView
+- [x] Valider `npm run quality:ci`
 - [ ] Commit: `chore(front): harden settings migration checks`
 - [ ] Push `origin/main`
 
