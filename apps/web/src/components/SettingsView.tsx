@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { Save, Lock, UserPlus, Trash2, Shield, Globe, Database, Download, Upload } from 'lucide-react';
 
-import { useSettings } from '../context/SettingsContext';
+import { useSettings } from '../contexts/SettingsContext';
 import { APP_STORAGE_KEYS, AUTO_BACKUPS_STORAGE_KEY } from '../constants';
 import { AutoBackupEntry, buildGlobalBackupPayload, downloadJSON, getAutoBackups, formatDate, saveAutoBackup } from '../utils';
 

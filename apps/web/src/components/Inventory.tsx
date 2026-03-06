@@ -5,7 +5,7 @@ import { Ingredient, Purchase, Waste } from '../types';
 import { formatPrix, formatDate } from '../utils';
 
 // Contexts
-import { useInventory } from '../context/InventoryContext';
+import { useInventory } from '../contexts/InventoryContext';
 
 const Inventory: React.FC = () => {
   const { ingredients, wastes, addIngredient, addPurchase, addWaste } = useInventory();

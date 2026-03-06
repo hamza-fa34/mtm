@@ -13,12 +13,12 @@ import EndOfDay from './components/EndOfDay';
 import { Lock } from 'lucide-react';
 
 // Contexts
-import { SettingsProvider, useSettings } from './context/SettingsContext';
-import { CategoryProvider } from './context/CategoryContext';
-import { InventoryProvider, useInventory } from './context/InventoryContext';
-import { OrderProvider, useOrders } from './context/OrderContext';
-import { ProductProvider, useProducts } from './context/ProductContext';
-import { CustomerProvider, useCustomers } from './context/CustomerContext';
+import { SettingsProvider, useSettings } from './contexts/SettingsContext';
+import { CategoryProvider } from './contexts/CategoryContext';
+import { InventoryProvider, useInventory } from './contexts/InventoryContext';
+import { OrderProvider, useOrders } from './contexts/OrderContext';
+import { ProductProvider, useProducts } from './contexts/ProductContext';
+import { CustomerProvider, useCustomers } from './contexts/CustomerContext';
 
 const AppContent: React.FC = () => {
   const { currentView, setCurrentView, isLocked, pin, handlePinInput, setIsLocked, hasPermission } = useSettings();

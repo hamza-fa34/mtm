@@ -5,8 +5,8 @@ import { Product, RecipeItem } from '../types';
 import { formatPrix, calculerCoutMatiere, formatPercent } from '../utils';
 
 // Contexts
-import { useInventory } from '../context/InventoryContext';
-import { useProducts } from '../context/ProductContext';
+import { useInventory } from '../contexts/InventoryContext';
+import { useProducts } from '../contexts/ProductContext';
 import { ASSETS } from '../assets';
 
 const MenuManager: React.FC = () => {

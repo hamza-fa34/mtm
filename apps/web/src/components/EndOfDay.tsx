@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Moon, Play, Square, History, TrendingUp, Banknote, CreditCard, Ticket, Calculator, Download } from 'lucide-react';
-import { useOrders } from '../context/OrderContext';
-import { useSettings } from '../context/SettingsContext';
+import { useOrders } from '../contexts/OrderContext';
+import { useSettings } from '../contexts/SettingsContext';
 import { formatPrix, formatDate } from '../utils';
 
 const EndOfDay: React.FC = () => {

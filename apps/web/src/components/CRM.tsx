@@ -5,8 +5,8 @@ import { Customer } from '../types';
 import { formatDate } from '../utils';
 
 // Contexts
-import { useCustomers } from '../context/CustomerContext';
-import { useOrders } from '../context/OrderContext';
+import { useCustomers } from '../contexts/CustomerContext';
+import { useOrders } from '../contexts/OrderContext';
 
 const CRM: React.FC = () => {
   const { customers, addCustomer } = useCustomers();

@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { LayoutDashboard, ShoppingCart, ChefHat, Package, Users, Settings, Utensils, ClipboardList, Wallet, Moon, LogOut } from 'lucide-react';
-import { useSettings } from '../context/SettingsContext';
-import { useInventory } from '../context/InventoryContext';
+import { useSettings } from '../contexts/SettingsContext';
+import { useInventory } from '../contexts/InventoryContext';
 import { useDataSourceStatus } from '../data/useDataSourceStatus';
 
 const Sidebar: React.FC = () => {
