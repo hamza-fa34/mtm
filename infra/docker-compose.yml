@@ -43,6 +43,14 @@ services:
       NODE_ENV: development
       PORT: 4000
       DATABASE_URL: postgresql://mtm:mtm@db:5432/mtm
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-mtm-access-dev-secret}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-mtm-refresh-dev-secret}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-7d}
+      ALLOW_PLAIN_PIN_LOGIN: ${ALLOW_PLAIN_PIN_LOGIN:-true}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-900000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-100}
     command: sh -c "npm ci && npx prisma generate && npm run start:dev"
     depends_on:
       db:
@@ -60,6 +68,14 @@ services:
       NODE_ENV: production
       PORT: 4000
       DATABASE_URL: postgresql://mtm:mtm@db:5432/mtm
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change-me-in-prod-access}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-me-in-prod-refresh}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-7d}
+      ALLOW_PLAIN_PIN_LOGIN: ${ALLOW_PLAIN_PIN_LOGIN:-false}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-change-me-in-prod-origin}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-900000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-100}
     depends_on:
       db:
         condition: service_healthy
