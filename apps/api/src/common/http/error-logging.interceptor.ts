@@ -29,6 +29,7 @@ export class ErrorLoggingInterceptor implements NestInterceptor {
             : undefined;
 
         const log = {
+          timestamp: new Date().toISOString(),
           level: 'error',
           event: 'http_error',
           requestId: req.requestId ?? req.headers['x-request-id'] ?? null,
