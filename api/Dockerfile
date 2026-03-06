@@ -3,6 +3,8 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
+COPY prisma.config.ts ./
+COPY prisma ./prisma
 RUN npm ci
 
 COPY . .
