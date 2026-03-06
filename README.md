@@ -26,9 +26,12 @@ mtm/
 - `npm run web:quality:ci`
 - `npm run web:e2e`
 - `npm run api:build`
+- `npm run api:config:sanity`
 - `npm run quality:ci` (web quality + api build)
 - `npm run docker:up`
 - `npm run docker:down`
+- `npm run db:backup:dump`
+- `npm run db:backup:restore -- ./backups/<file.dump>`
 
 ## Frontend (apps/web)
 Configuration:

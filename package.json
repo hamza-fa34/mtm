@@ -9,8 +9,11 @@
     "web:e2e": "npm --prefix apps/web run e2e",
     "api:build": "npm --prefix apps/api run build",
     "api:test:e2e": "npm --prefix apps/api run test:e2e",
+    "api:config:sanity": "npm --prefix apps/api run config:sanity",
     "quality:ci": "npm run web:quality:ci && npm run api:build",
     "docker:up": "docker compose -f infra/docker-compose.yml --profile fullstack up --build -d",
-    "docker:down": "docker compose -f infra/docker-compose.yml down"
+    "docker:down": "docker compose -f infra/docker-compose.yml down",
+    "db:backup:dump": "node scripts/db-backup-dump.cjs",
+    "db:backup:restore": "node scripts/db-backup-restore.cjs"
   }
 }
