@@ -10,6 +10,7 @@ import { OrdersModule } from './orders/orders.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductsModule } from './products/products.module';
 import { SettingsModule } from './settings/settings.module';
+import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SettingsModule } from './settings/settings.module';
     SettingsModule,
     OrdersModule,
     InventoryModule,
+    SessionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

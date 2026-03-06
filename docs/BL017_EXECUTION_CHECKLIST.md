@@ -17,7 +17,7 @@
 |---|---|---|---|
 | L1 | Orders write transactionnel | IN_PROGRESS | NO-GO |
 | L2 | Inventory write transactionnel | IN_PROGRESS | NO-GO |
-| L3 | Sessions / End-of-Day transactionnel | TODO | NO-GO |
+| L3 | Sessions / End-of-Day transactionnel | IN_PROGRESS | NO-GO |
 | L4 | Auth/roles backend stricts | TODO | NO-GO |
 | L5 | Migration reelle local -> DB (cutover controle) | TODO | NO-GO |
 | L6 | Tests integration + E2E critiques | TODO | NO-GO |
@@ -51,13 +51,13 @@
 
 ## L3 - Sessions / End-of-Day transactionnel
 ### Checklist
-- [ ] Endpoint `sessions/open` avec contrainte "1 session ouverte max"
-- [ ] Endpoint `sessions/close` transactionnel
-- [ ] Rapprochement total ventes / moyens de paiement / TVA
-- [ ] Backup de secours maintenu
-- [ ] Tests integration sur ouverture/fermeture et echec
+- [x] Endpoint `sessions/open` avec contrainte "1 session ouverte max"
+- [x] Endpoint `sessions/close` transactionnel
+- [x] Rapprochement total ventes / moyens de paiement / TVA
+- [x] Backup de secours maintenu
+- [x] Tests integration sur ouverture/fermeture et echec
 - [ ] Validation manuelle EndOfDay
-- [ ] Commit + push
+- [x] Commit + push
 ### Critere GO
 - [ ] Cloture session fiable sans perte de donnees
 
