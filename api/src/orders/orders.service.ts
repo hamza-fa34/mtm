@@ -22,6 +22,7 @@ type CreateOrderInput = {
   total: number;
   paymentMethod: PaymentMethod;
   serviceMode: ServiceMode;
+  idempotencyKey?: string;
   customerId?: string;
   sessionId?: string;
 };
@@ -96,6 +97,22 @@ export class OrdersService {
   }
 
   async createOrder(input: CreateOrderInput) {
+    const normalizedIdempotencyKey =
+      typeof input.idempotencyKey === 'string' &&
+      input.idempotencyKey.trim().length > 0
+        ? input.idempotencyKey.trim()
+        : undefined;
+
+    if (normalizedIdempotencyKey) {
+      const existingOrder = await this.prisma.order.findUnique({
+        where: { idempotencyKey: normalizedIdempotencyKey },
+        include: { items: true },
+      });
+      if (existingOrder) {
+        return this.serializeOrder(existingOrder);
+      }
+    }
+
     if (!Array.isArray(input.items) || input.items.length === 0) {
       throw new BadRequestException('Order items are required');
     }
@@ -132,7 +149,14 @@ export class OrdersService {
       throw new BadRequestException('Order total does not match item totals');
     }
 
-    const order = await this.prisma.$transaction(async (tx) => {
+    let order:
+      | Prisma.OrderGetPayload<{
+          include: { items: true };
+        }>
+      | null = null;
+
+    try {
+      order = await this.prisma.$transaction(async (tx) => {
       const session = await this.resolveOpenSession(tx, input.sessionId);
 
       const productIds = [...new Set(normalizedItems.map((item) => item.productId))];
@@ -195,6 +219,7 @@ export class OrdersService {
       const createdOrder = await tx.order.create({
         data: {
           orderNumber,
+          idempotencyKey: normalizedIdempotencyKey,
           total: providedTotal,
           status: 'PENDING',
           paymentMethod: input.paymentMethod,
@@ -254,7 +279,31 @@ export class OrdersService {
 
       return createdOrder;
     });
+    } catch (error) {
+      if (
+        normalizedIdempotencyKey &&
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        const existingOrder = await this.prisma.order.findUnique({
+          where: { idempotencyKey: normalizedIdempotencyKey },
+          include: { items: true },
+        });
+        if (existingOrder) {
+          return this.serializeOrder(existingOrder);
+        }
+      }
+      throw error;
+    }
 
+    return this.serializeOrder(order);
+  }
+
+  private serializeOrder(
+    order: Prisma.OrderGetPayload<{
+      include: { items: true };
+    }>,
+  ) {
     return {
       id: order.id,
       orderNumber: order.orderNumber,

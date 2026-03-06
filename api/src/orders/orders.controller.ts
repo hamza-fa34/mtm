@@ -27,6 +27,7 @@ export class OrdersController {
       total: number;
       paymentMethod: PaymentMethod;
       serviceMode: ServiceMode;
+      idempotencyKey?: string;
       customerId?: string;
       sessionId?: string;
     },

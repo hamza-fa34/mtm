@@ -175,6 +175,7 @@ model DailySession {
 model Order {
   id            String        @id @default(cuid())
   orderNumber   String
+  idempotencyKey String?      @unique
   orderedAt     DateTime      @default(now())
   total         Decimal       @db.Decimal(12, 2)
   status        OrderStatus
