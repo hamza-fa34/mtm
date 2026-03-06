@@ -99,6 +99,39 @@ function sanitizeOrder(input: Partial<Order>, index: number): Order {
   };
 }
 
+function sanitizeDailySession(input: Partial<DailySession>, index: number): DailySession {
+  const status =
+    input.status && ['OPEN', 'CLOSED'].includes(input.status)
+      ? input.status
+      : 'OPEN';
+
+  return {
+    id: input.id ?? `session-${index + 1}`,
+    startTime: safeNumber(input.startTime, Date.now()),
+    endTime:
+      typeof input.endTime === 'number' && Number.isFinite(input.endTime)
+        ? input.endTime
+        : undefined,
+    initialCash: safeNumber(input.initialCash, 0),
+    finalCash:
+      typeof input.finalCash === 'number' && Number.isFinite(input.finalCash)
+        ? input.finalCash
+        : undefined,
+    totalSales: safeNumber(input.totalSales, 0),
+    totalExpenses: safeNumber(input.totalExpenses, 0),
+    ordersCount: safeNumber(input.ordersCount, 0),
+    status,
+    salesByMethod:
+      input.salesByMethod && typeof input.salesByMethod === 'object'
+        ? input.salesByMethod
+        : { CASH: 0, CARD: 0, TR: 0 },
+    vatSummary:
+      input.vatSummary && typeof input.vatSummary === 'object'
+        ? input.vatSummary
+        : {},
+  };
+}
+
 export function getLocalOrdersState(): OrdersState {
   const localOrders = readJsonFromStorage<Order[]>(ORDERS_KEY);
   const localCurrentSession = readJsonFromStorage<DailySession | null>(
@@ -113,10 +146,14 @@ export function getLocalOrdersState(): OrdersState {
       localOrders && Array.isArray(localOrders)
         ? localOrders.map((item, index) => sanitizeOrder(item, index))
         : MOCK_ORDERS,
-    currentSession: localCurrentSession ?? null,
+    currentSession: localCurrentSession
+      ? sanitizeDailySession(localCurrentSession, 0)
+      : null,
     sessionsHistory:
       localSessionsHistory && Array.isArray(localSessionsHistory)
-        ? localSessionsHistory
+        ? localSessionsHistory.map((item, index) =>
+            sanitizeDailySession(item, index),
+          )
         : [],
   };
 }

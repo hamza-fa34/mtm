@@ -74,7 +74,11 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       },
     });
 
-    saveAutoBackup(backupPayload);
+    try {
+      saveAutoBackup(backupPayload);
+    } catch {
+      // Backup should never block session closure.
+    }
     setSessionsHistory(nextSessionsHistory);
     setCurrentSession(null);
   };

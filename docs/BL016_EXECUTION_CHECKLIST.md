@@ -88,11 +88,11 @@ Checklist:
 Objectif: finaliser migration sessions sans perte data
 
 Checklist:
-- [ ] Verifier ouverture/fermeture session
-- [ ] Verifier recap ventes/methodes/TVA
-- [ ] Verifier backup auto en cloture
-- [ ] Verifier rollback complet via export/import JSON
-- [ ] Valider `npm run quality:ci`
+- [x] Verifier ouverture/fermeture session
+- [x] Verifier recap ventes/methodes/TVA
+- [x] Verifier backup auto en cloture
+- [x] Verifier rollback complet via export/import JSON
+- [x] Valider `npm run quality:ci`
 - [ ] Commit: `feat(front): migrate sessions with rollback safeguards`
 - [ ] Push `origin/main`
 
