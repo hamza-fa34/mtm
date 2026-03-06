@@ -24,11 +24,11 @@
 - No production deployment hardening yet
 
 ## Immediate Next Milestones
-1. Bring up infrastructure services in Docker (`frontend`, `api`, `db`)
-2. Keep frontend fully operational as-is
-3. Add backend health endpoint and env configuration
-4. Initialize Prisma schema and first migration skeleton
-5. Start module-by-module migration with low-risk domain first
+1. Bring up infrastructure services in Docker (`frontend`, `api`, `db`) - DONE
+2. Keep frontend fully operational as-is - DONE
+3. Add backend health endpoint and env configuration - DONE
+4. Initialize Prisma schema and first migration skeleton - DONE
+5. Start module-by-module migration with low-risk domain first - DONE (BL-016/BL-017)
 
 ## Future Evolution Path
 - Step 1: Read-only backend endpoints for products/settings

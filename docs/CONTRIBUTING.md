@@ -37,5 +37,5 @@ Chaque changement doit contenir:
 - [ ] Le changement est coherent avec `AGENTS.md`
 - [ ] La solution est incrementale et reversible
 - [ ] Les erreurs utilisateur sont gerees
-- [ ] Les permissions sensibles sont respectées
+- [ ] Les permissions sensibles sont respectees
 - [ ] Le rollback est praticable

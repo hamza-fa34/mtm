@@ -23,7 +23,7 @@
 | BL-014 | P4 | Contrats API prioritaires (auth/orders/products/inventory/customers) | L | BL-013 | DONE |
 | BL-015 | P4 | Couche abstraction data (local/api) | L | BL-014 | DONE |
 | BL-016 | P4 | Plan migration localStorage -> DB + rollback | M | BL-013, BL-015 | DONE |
-| BL-017 | P4 | Ecritures transactionnelles + migration reelle + quality gates pro | L | BL-016 | IN_PROGRESS |
+| BL-017 | P4 | Ecritures transactionnelles + migration reelle + quality gates pro | L | BL-016 | DONE |
 
 ## Prochaine Action Recommandee
-- Executer `docs/BL017_EXECUTION_CHECKLIST.md` lot par lot, avec commit+push apres chaque lot valide.
+- Ouvrir un nouveau lot post-BL-017 (stabilisation documentaire + phase suivante) avec une checklist dediee.

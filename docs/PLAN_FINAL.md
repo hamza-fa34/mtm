@@ -3,6 +3,11 @@
 ## Objectif Global
 Transformer le MVP actuel en produit robuste, sans casser les flux terrain critiques (POS, KDS, EndOfDay), avec une migration progressive vers une architecture complete.
 
+## Etat global au 2026-03-06
+- Phases 0 -> 4: executees et validees.
+- BL-017: cloture (`DONE/GO`).
+- Prochaine etape: revue documentaire finale puis ouverture de la phase suivante.
+
 ## Phase 0 - Decisions Metier (Semaine 1)
 Objectif: verrouiller les regles business avant tout developpement.
 

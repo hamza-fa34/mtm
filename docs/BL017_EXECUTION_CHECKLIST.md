@@ -6,10 +6,10 @@
 - Commit + push a la fin de chaque lot valide.
 
 ## Statut global
-- Date de lancement:
-- Responsable:
-- Branche:
-- Environnement cible:
+- Date de lancement: 2026-03-06
+- Responsable: Hamza + Codex
+- Branche: `main`
+- Environnement cible: Docker fullstack (`frontend` + `api` + `db`)
 
 ## Lots et avancement
 
