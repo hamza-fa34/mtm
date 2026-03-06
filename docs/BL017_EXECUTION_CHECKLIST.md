@@ -20,7 +20,7 @@
 | L3 | Sessions / End-of-Day transactionnel | IN_PROGRESS | NO-GO |
 | L4 | Auth/roles backend stricts | IN_PROGRESS | NO-GO |
 | L5 | Migration reelle local -> DB (cutover controle) | IN_PROGRESS | NO-GO |
-| L6 | Tests integration + E2E critiques | TODO | NO-GO |
+| L6 | Tests integration + E2E critiques | IN_PROGRESS | NO-GO |
 | L7 | CI/CD minimale pro + observabilite + runbooks | TODO | NO-GO |
 
 ---
@@ -85,7 +85,7 @@
 
 ## L6 - Tests integration + E2E
 ### Checklist
-- [ ] Suite integration backend (Jest + Supertest + DB test)
+- [x] Suite integration backend (Jest + Supertest + DB test)
 - [ ] Scenarios E2E critiques front (Playwright)
 - [ ] Scenarios manuels metier mis a jour
 - [ ] Non-regression POS/KDS/session validee
