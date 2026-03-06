@@ -17,12 +17,12 @@
 Objectif: basculer lecture categories vers adapter `api -> fallback local`
 
 Checklist:
-- [ ] Creer `categoriesDataAdapter` (lecture API + fallback constantes/local)
-- [ ] Brancher les composants consommateurs de categories
-- [ ] Verifier comportement POS/Menu identique
-- [ ] Tester API disponible
-- [ ] Tester API indisponible (fallback local)
-- [ ] Valider `npm run quality:ci`
+- [x] Creer `categoriesDataAdapter` (lecture API + fallback constantes/local)
+- [x] Brancher les composants consommateurs de categories
+- [x] Verifier comportement POS/Menu identique
+- [x] Tester API disponible
+- [x] Tester API indisponible (fallback local)
+- [x] Valider `npm run quality:ci`
 - [ ] Commit: `feat(front): migrate categories to adapter with fallback`
 - [ ] Push `origin/main`
 

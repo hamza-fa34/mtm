@@ -1,17 +1,18 @@
 
 import React, { useState, useMemo } from 'react';
 import { Search, Plus, ShoppingCart, CreditCard, Banknote, Ticket, Truck, UtensilsCrossed, Gift, X, AlertTriangle } from 'lucide-react';
-import { CATEGORIES } from '../constants';
 import { Product, CartItem, ServiceMode, PaymentMethod, Variant } from '../types';
 import { calculerTotaux, formatPrix } from '../utils';
 
 // Contexts
+import { useCategories } from '../context/CategoryContext';
 import { useInventory } from '../context/InventoryContext';
 import { useOrders } from '../context/OrderContext';
 import { useProducts } from '../context/ProductContext';
 import { useCustomers } from '../context/CustomerContext';
 
 const POS: React.FC = () => {
+  const { categories } = useCategories();
   const { ingredients, getProductStockStatus, reduceStock } = useInventory();
   const { addOrder, currentSession } = useOrders();
   const { products } = useProducts();
@@ -164,7 +165,7 @@ const POS: React.FC = () => {
             >
               Tous
             </button>
-            {CATEGORIES.map(cat => (
+            {categories.map(cat => (
               <button 
                 key={cat.id} 
                 onClick={() => setActiveCategoryId(cat.id)}

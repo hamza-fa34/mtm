@@ -14,6 +14,7 @@ import { Lock } from 'lucide-react';
 
 // Contexts
 import { SettingsProvider, useSettings } from './context/SettingsContext';
+import { CategoryProvider } from './context/CategoryContext';
 import { InventoryProvider, useInventory } from './context/InventoryContext';
 import { OrderProvider, useOrders } from './context/OrderContext';
 import { ProductProvider, useProducts } from './context/ProductContext';
@@ -126,15 +127,17 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <SettingsProvider>
-      <InventoryProvider>
-        <ProductProvider>
-          <CustomerProvider>
-            <OrderProvider>
-              <AppContent />
-            </OrderProvider>
-          </CustomerProvider>
-        </ProductProvider>
-      </InventoryProvider>
+      <CategoryProvider>
+        <InventoryProvider>
+          <ProductProvider>
+            <CustomerProvider>
+              <OrderProvider>
+                <AppContent />
+              </OrderProvider>
+            </CustomerProvider>
+          </ProductProvider>
+        </InventoryProvider>
+      </CategoryProvider>
     </SettingsProvider>
   );
 };

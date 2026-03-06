@@ -1,7 +1,13 @@
 import { getDataSourceMode } from './config';
 
 export type DataSourceRuntimeStatus = 'local' | 'api' | 'fallback';
-type DataDomain = 'settings' | 'products' | 'customers' | 'orders' | 'inventory';
+type DataDomain =
+  | 'categories'
+  | 'settings'
+  | 'products'
+  | 'customers'
+  | 'orders'
+  | 'inventory';
 
 const domainStatus: Partial<Record<DataDomain, DataSourceRuntimeStatus>> = {};
 const listeners = new Set<() => void>();
