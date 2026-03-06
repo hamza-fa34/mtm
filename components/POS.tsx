@@ -234,6 +234,7 @@ const POS: React.FC = () => {
                 className={`bg-white rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-2xl transition-all text-left overflow-hidden group relative ${isOutOfStock ? 'opacity-60 grayscale' : ''}`}
               >
                 <button 
+                  data-testid={`product-card-${product.id}`}
                   onClick={() => !isOutOfStock && addToCart(product)} 
                   disabled={isOutOfStock}
                   className={`w-full text-left transition-transform ${isOutOfStock ? 'cursor-not-allowed' : 'active:scale-95'}`}
@@ -343,10 +344,10 @@ const POS: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <button onClick={() => handleCheckout('CARD')} disabled={cart.length === 0} className="bg-[#b3247e] text-white p-5 rounded-3xl font-black text-[10px] uppercase tracking-widest flex flex-col items-center gap-2 hover:bg-[#8a1a60] transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-pink-100">
+            <button data-testid="checkout-card" onClick={() => handleCheckout('CARD')} disabled={cart.length === 0} className="bg-[#b3247e] text-white p-5 rounded-3xl font-black text-[10px] uppercase tracking-widest flex flex-col items-center gap-2 hover:bg-[#8a1a60] transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-pink-100">
               <CreditCard size={24} /> Carte Bancaire
             </button>
-            <button onClick={() => handleCheckout('CASH')} disabled={cart.length === 0} className="bg-[#54bb24] text-white p-5 rounded-3xl font-black text-[10px] uppercase tracking-widest flex flex-col items-center gap-2 hover:bg-[#449c1d] transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-green-100">
+            <button data-testid="checkout-cash" onClick={() => handleCheckout('CASH')} disabled={cart.length === 0} className="bg-[#54bb24] text-white p-5 rounded-3xl font-black text-[10px] uppercase tracking-widest flex flex-col items-center gap-2 hover:bg-[#449c1d] transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-green-100">
               <Banknote size={24} /> Espèces
             </button>
           </div>

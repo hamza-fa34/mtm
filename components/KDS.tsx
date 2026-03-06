@@ -36,6 +36,7 @@ const KDS: React.FC = () => {
           ) : activeOrders.map(order => (
             <div 
               key={order.id} 
+              data-testid="kds-order-card"
               className={`w-80 flex flex-col bg-white rounded-[2.5rem] shadow-xl border-t-8 overflow-hidden animate-in slide-in-from-bottom-4 ${
                 order.status === 'PREPARING' ? 'border-[#b3247e]' : 'border-gray-200'
               }`}

@@ -86,10 +86,10 @@
 ## L6 - Tests integration + E2E
 ### Checklist
 - [x] Suite integration backend (Jest + Supertest + DB test)
-- [ ] Scenarios E2E critiques front (Playwright)
-- [ ] Scenarios manuels metier mis a jour
-- [ ] Non-regression POS/KDS/session validee
-- [ ] Commit + push
+- [x] Scenarios E2E critiques front (Playwright)
+- [x] Scenarios manuels metier mis a jour
+- [x] Non-regression POS/KDS/session validee
+- [x] Commit + push
 ### Critere GO
 - [ ] Pipeline tests verte sur tous les flux critiques
 

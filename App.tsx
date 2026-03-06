@@ -52,9 +52,9 @@ const AppContent: React.FC = () => {
 
           <div className="grid grid-cols-3 gap-6 w-full">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => (
-              <button key={n} onClick={() => handlePinInput(n.toString())} className="w-full aspect-square rounded-2xl bg-white/10 text-white font-black text-2xl hover:bg-white hover:text-[#b3247e] transition-all active:scale-90">{n}</button>
+              <button key={n} data-testid={`pin-${n}`} onClick={() => handlePinInput(n.toString())} className="w-full aspect-square rounded-2xl bg-white/10 text-white font-black text-2xl hover:bg-white hover:text-[#b3247e] transition-all active:scale-90">{n}</button>
             ))}
-            <button className="col-start-2 aspect-square rounded-2xl bg-white/10 text-white font-black text-2xl hover:bg-white hover:text-[#b3247e] transition-all active:scale-90" onClick={() => handlePinInput('0')}>0</button>
+            <button data-testid="pin-0" className="col-start-2 aspect-square rounded-2xl bg-white/10 text-white font-black text-2xl hover:bg-white hover:text-[#b3247e] transition-all active:scale-90" onClick={() => handlePinInput('0')}>0</button>
           </div>
         </div>
       </div>

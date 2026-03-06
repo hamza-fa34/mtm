@@ -67,6 +67,7 @@ const Sidebar: React.FC = () => {
                   return (
                     <button
                       key={item.id}
+                      data-testid={`nav-${item.id}`}
                       onClick={() => setCurrentView(item.id)}
                       className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${
                         isActive 

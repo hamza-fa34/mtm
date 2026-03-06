@@ -35,6 +35,7 @@ const EndOfDay: React.FC = () => {
               />
             </div>
             <button 
+              data-testid="open-session-btn"
               onClick={() => openSession(initialCash)}
               className="w-full bg-[#54bb24] text-white py-6 rounded-3xl font-black uppercase tracking-widest shadow-xl shadow-green-100 hover:scale-105 transition-all active:scale-95"
             >
@@ -263,6 +264,7 @@ const EndOfDay: React.FC = () => {
               </div>
 
               <button 
+                data-testid="close-session-btn"
                 onClick={() => {
                   closeSession(finalCash);
                   setCurrentView('dashboard');

@@ -24,6 +24,18 @@
 - Limite:
   - Les scenarios T01 -> T10 necessitent une execution manuelle UI (parcours metier complet).
 
+### Campagne 2026-03-06 - E2E front automatise (Playwright)
+- Testeur: Codex
+- Environnement: local (Vite + Chromium Playwright)
+- Resultat:
+  - `npm run e2e`: OK (3/3)
+  - Flux couverts:
+    - ouverture session manager (T01 partiel)
+    - creation commande POS + presence KDS (T02 + T04 partiel)
+    - cloture session et retour dashboard (T05 partiel)
+- Limite:
+  - Les scenarios T03, T06, T07, T08, T09, T10 restent a valider manuellement.
+
 ## 3) Tableau de Suivi
 
 | ID | Scenario | Statut | Date | Notes |
