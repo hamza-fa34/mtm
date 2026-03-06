@@ -24,6 +24,11 @@
 | BL-015 | P4 | Couche abstraction data (local/api) | L | BL-014 | DONE |
 | BL-016 | P4 | Plan migration localStorage -> DB + rollback | M | BL-013, BL-015 | DONE |
 | BL-017 | P4 | Ecritures transactionnelles + migration reelle + quality gates pro | L | BL-016 | DONE |
+| BL-018A | P5 | Pre-prod hardening config + secrets | M | BL-017 | TODO |
+| BL-018B | P5 | Pre-prod hardening security HTTP baseline | M | BL-018A | TODO |
+| BL-018C | P5 | Pre-prod observability ready + request correlation | M | BL-018B | TODO |
+| BL-018D | P5 | Pre-prod backup/restore automatisables | M | BL-018C | TODO |
+| BL-018E | P5 | Pre-prod CI gate renforce | M | BL-018D | TODO |
 
 ## Prochaine Action Recommandee
-- Ouvrir un nouveau lot post-BL-017 (stabilisation documentaire + phase suivante) avec une checklist dediee.
+- Demarrer BL-018A (config + secrets hardening) selon `docs/BL018_PREPROD_HARDENING_PLAN.md`.
