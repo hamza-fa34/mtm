@@ -16,8 +16,20 @@ Fournir une procedure courte pour diagnostiquer et contenir un incident producti
   - `GET /api/health`
 - Logs API:
   - `docker logs mtm_api_dev --tail 200`
+  - Les logs sont JSON structures avec:
+    - `event=http_request` pour les requetes
+    - `event=http_error` pour les erreurs
+    - `requestId` pour correler une requete et son erreur
 - Etat DB:
   - `docker exec -it mtm_db pg_isready -U mtm -d mtm`
+
+## Correlation d'une erreur
+1. Recuperer `x-request-id` depuis la reponse HTTP (header).
+2. Filtrer les logs sur cette valeur:
+   - `docker logs mtm_api_dev --tail 500 | grep "<request-id>"`
+3. Verifier la sequence:
+   - `http_error` (cause)
+   - `http_request` (status final + latence)
 
 ## Containment
 - Si API indisponible:
@@ -38,4 +50,3 @@ Fournir une procedure courte pour diagnostiquer et contenir un incident producti
 1. Documenter cause racine + impact + timeline.
 2. Ajouter test de non-regression.
 3. Mettre a jour checklist BL-017 / backlog.
-
