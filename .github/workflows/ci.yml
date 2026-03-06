@@ -75,6 +75,9 @@ jobs:
       - name: Install backend deps
         working-directory: api
         run: npm ci
+      - name: Prisma generate
+        working-directory: api
+        run: npm run prisma:generate
       - name: Prisma validate
         working-directory: api
         run: npm run prisma:validate
