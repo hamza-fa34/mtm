@@ -1,0 +1,16 @@
+{
+  "name": "mtm-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "web:dev": "npm --prefix apps/web run dev",
+    "web:build": "npm --prefix apps/web run build",
+    "web:quality:ci": "npm --prefix apps/web run quality:ci",
+    "web:e2e": "npm --prefix apps/web run e2e",
+    "api:build": "npm --prefix apps/api run build",
+    "api:test:e2e": "npm --prefix apps/api run test:e2e",
+    "quality:ci": "npm run web:quality:ci && npm run api:build",
+    "docker:up": "docker compose -f infra/docker-compose.yml --profile fullstack up --build -d",
+    "docker:down": "docker compose -f infra/docker-compose.yml down"
+  }
+}

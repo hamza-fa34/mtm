@@ -2,12 +2,12 @@ services:
   frontend:
     container_name: mtm_frontend_dev
     build:
-      context: .
+      context: ../apps/web
       dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - ../apps/web:/app
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -21,7 +21,7 @@ services:
   frontend_prod:
     container_name: mtm_frontend_prod
     build:
-      context: .
+      context: ../apps/web
       dockerfile: Dockerfile
     ports:
       - "4173:4173"
@@ -32,12 +32,12 @@ services:
   api:
     container_name: mtm_api_dev
     build:
-      context: ./api
+      context: ../apps/api
       dockerfile: Dockerfile.dev
     ports:
       - "4000:4000"
     volumes:
-      - ./api:/app
+      - ../apps/api:/app
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -52,7 +52,7 @@ services:
   api_prod:
     container_name: mtm_api_prod
     build:
-      context: ./api
+      context: ../apps/api
       dockerfile: Dockerfile
     ports:
       - "4001:4000"
