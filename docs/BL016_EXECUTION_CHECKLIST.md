@@ -64,11 +64,11 @@ Checklist:
 Objectif: migration reelle inventory (lecture API, ecriture locale au debut)
 
 Checklist:
-- [ ] Verifier mapping unites (`kg/g/L/ml/unit`)
-- [ ] Verifier mapping reasons wastes (`Peremption/Péremption`)
-- [ ] Verifier statut stock produit
-- [ ] Tester API vide/KO -> fallback local
-- [ ] Valider `npm run quality:ci`
+- [x] Verifier mapping unites (`kg/g/L/ml/unit`)
+- [x] Verifier mapping reasons wastes (`Peremption/Péremption`)
+- [x] Verifier statut stock produit
+- [x] Tester API vide/KO -> fallback local
+- [x] Valider `npm run quality:ci`
 - [ ] Commit: `feat(front): migrate inventory with guarded fallback`
 - [ ] Push `origin/main`
 

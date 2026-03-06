@@ -10,6 +10,7 @@ import {
 
 interface InventoryContextType {
   ingredients: Ingredient[];
+  purchases: Purchase[];
   wastes: Waste[];
   addIngredient: (ing: Omit<Ingredient, 'id'>) => void;
   addPurchase: (p: Omit<Purchase, 'id'>) => void;
@@ -23,17 +24,19 @@ const InventoryContext = createContext<InventoryContextType | undefined>(undefin
 export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const localState = getLocalInventoryState();
   const [ingredients, setIngredients] = useState<Ingredient[]>(localState.ingredients);
+  const [purchases, setPurchases] = useState<Purchase[]>(localState.purchases);
   const [wastes, setWastes] = useState<Waste[]>(localState.wastes);
 
   useEffect(() => {
-    void saveInventoryState({ ingredients, wastes });
-  }, [ingredients, wastes]);
+    void saveInventoryState({ ingredients, purchases, wastes });
+  }, [ingredients, purchases, wastes]);
 
   useEffect(() => {
     let mounted = true;
     void loadInventoryState().then((state) => {
       if (!mounted) return;
       setIngredients(state.ingredients);
+      setPurchases(state.purchases);
       setWastes(state.wastes);
     });
     return () => {
@@ -48,6 +51,14 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const addPurchase = (p: Omit<Purchase, 'id'>) => {
     if (!Number.isFinite(p.quantity) || p.quantity <= 0) return;
     if (!Number.isFinite(p.totalPrice) || p.totalPrice < 0) return;
+
+    setPurchases((prev) => [
+      {
+        ...p,
+        id: crypto.randomUUID(),
+      },
+      ...prev,
+    ]);
 
     setIngredients(prev => prev.map(ing => {
       if (ing.id === p.ingredientId) {
@@ -102,7 +113,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   return (
     <InventoryContext.Provider value={{
-      ingredients, wastes,
+      ingredients, purchases, wastes,
       addIngredient, addPurchase, addWaste, reduceStock,
       getProductStockStatus
     }}>

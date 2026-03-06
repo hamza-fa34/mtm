@@ -19,15 +19,15 @@ const Inventory: React.FC = () => {
     ingredientId: '',
     quantity: 0,
     totalPrice: 0,
-    timestamp: Date.now(),
-    supplier: ''
+    date: Date.now(),
+    supplierName: ''
   });
 
   const [newWaste, setNewWaste] = useState<Omit<Waste, 'id'>>({
     ingredientId: '',
     quantity: 0,
-    reason: 'EXPIRED',
-    timestamp: Date.now()
+    reason: 'Autre',
+    date: Date.now()
   });
 
   const [newIng, setNewIng] = useState<Omit<Ingredient, 'id'>>({

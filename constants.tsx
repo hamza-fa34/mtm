@@ -7,6 +7,7 @@ export const APP_STORAGE_KEYS = [
   'molls_users',
   'molls_products',
   'molls_ingredients',
+  'molls_purchases',
   'molls_wastes',
   'molls_customers',
   'molls_orders',
