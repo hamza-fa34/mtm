@@ -32,4 +32,4 @@
 | BL-018F | P5 | Observabilite minimale exploitable (alert policy + drill) | S | BL-018C | DONE |
 
 ## Prochaine Action Recommandee
-- Configurer `OPS_BASE_URL` dans les variables repository puis activer la surveillance via `ops-monitor.yml`.
+- Finaliser la cloture documentaire BL-018 et cadrer BL-019 (monitoring GitHub active + prepa prod), puis lancer execution quand staging public est disponible.

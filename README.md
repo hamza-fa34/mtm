@@ -78,6 +78,9 @@ URLs:
 Automated monitor:
 - Workflow: `.github/workflows/ops-monitor.yml`
 - Configure repo variable: `OPS_BASE_URL` (target API base URL, including `/api`)
+ 
+Roadmap (next phase):
+- `docs/PHASE_NEXT_BL019.md`
 
 ## CI
 - Workflow: `.github/workflows/ci.yml`

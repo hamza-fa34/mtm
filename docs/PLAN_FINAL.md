@@ -6,7 +6,8 @@ Transformer le MVP actuel en produit robuste, sans casser les flux terrain criti
 ## Etat global au 2026-03-06
 - Phases 0 -> 4: executees et validees.
 - BL-017: cloture (`DONE/GO`).
-- Prochaine etape: revue documentaire finale puis ouverture de la phase suivante.
+- BL-018 (A->F): execute et valide (pre-prod hardening + observabilite minimale).
+- Prochaine etape: cloture documentaire finale puis cadrage phase suivante (BL-019).
 
 ## Phase 0 - Decisions Metier (Semaine 1)
 Objectif: verrouiller les regles business avant tout developpement.
@@ -95,3 +96,26 @@ Definition of Done:
 - 1 theme = 1 ticket = 1 PR
 - Pas de refactor global sans besoin explicite
 - Chaque ticket doit inclure: objectif, risque, test, rollback
+
+## Phase 5 - Pre-Prod Hardening (BL-018) - DONE
+Objectif: renforcer la robustesse technique avant preparation production.
+
+Livrables realises:
+- BL-018A: config/env hardening backend
+- BL-018B: security HTTP baseline (helmet/cors/rate-limit)
+- BL-018C: logs structures + correlation requestId + readiness
+- BL-018D: backup/restore scripts + runbook
+- BL-018E: gate CI pre-prod
+- BL-018F: observabilite minimale exploitable (alert policy + drill evidence)
+
+Definition of Done:
+- CI principale verte
+- runbooks et docs operations a jour
+- drill incident execute et documente
+- aucune regression metier critique constatee
+
+## Phase 6 - Cadrage BL-019 (A lancer plus tard)
+Objectif: preparer l'activation du monitoring GitHub et le passage vers une pre-production proche prod.
+
+Livrable de cadrage:
+- `docs/PHASE_NEXT_BL019.md`

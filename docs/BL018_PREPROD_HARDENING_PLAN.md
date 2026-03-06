@@ -58,3 +58,16 @@ Justification:
 - Aucune regression metier critique.
 - CI verte avec nouveau gate pre-prod.
 - Runbooks exploitation a jour.
+
+## Statut de Cloture (2026-03-06)
+- BL-018A: DONE
+- BL-018B: DONE
+- BL-018C: DONE
+- BL-018D: DONE
+- BL-018E: DONE
+- BL-018F (extension observabilite minimale): DONE
+
+References:
+- `docs/OBSERVABILITY_MINIMUM.md`
+- `docs/OBSERVABILITY_ALERT_MATRIX.md`
+- `docs/BL018F_OBSERVABILITY_DRILL_EVIDENCE.md`

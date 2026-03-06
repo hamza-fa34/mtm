@@ -19,9 +19,9 @@
 - Docker-first setup keeps local/dev/prod parity and eases future scaling
 
 ## Non-Goals For This Step
-- No immediate migration of frontend data to backend
-- No full domain implementation yet
-- No production deployment hardening yet
+- No big-bang rewrite
+- No complex offline sync architecture for now
+- No direct production cutover without staging validation
 
 ## Immediate Next Milestones
 1. Bring up infrastructure services in Docker (`frontend`, `api`, `db`) - DONE
@@ -31,8 +31,7 @@
 5. Start module-by-module migration with low-risk domain first - DONE (BL-016/BL-017)
 
 ## Future Evolution Path
-- Step 1: Read-only backend endpoints for products/settings
-- Step 2: Write flows (orders, sessions, stock adjustments)
-- Step 3: Auth + RBAC enforcement server-side
-- Step 4: Data migration tools (`localStorage -> PostgreSQL`)
-- Step 5: Observability, backups, and deployment hardening
+- Step 1: Activate GitHub ops monitor once staging URL is available (`OPS_BASE_URL`)
+- Step 2: Staging release hardening (secrets lifecycle + access policy + incident response)
+- Step 3: Production readiness gate (GO/NO-GO with runbooks and restore proof)
+- Step 4: Controlled production rollout
