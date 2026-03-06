@@ -6,13 +6,13 @@ Application metier pour food-truck: POS, KDS, stock, recettes/marges, CRM, sessi
 
 ```text
 mtm/
-├─ apps/
-│  ├─ web/      # Frontend React + Vite
-│  └─ api/      # Backend NestJS + Prisma + PostgreSQL
-├─ docs/
-├─ infra/
-│  └─ docker-compose.yml
-└─ .github/workflows/
+|- apps/
+|  |- web/      # Frontend React + Vite
+|  `- api/      # Backend NestJS + Prisma + PostgreSQL
+|- docs/
+|- infra/
+|  `- docker-compose.yml
+`- .github/workflows/
 ```
 
 ## Prerequis
