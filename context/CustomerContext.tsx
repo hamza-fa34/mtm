@@ -1,7 +1,11 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Customer } from '../types';
-import { MOCK_CUSTOMERS } from '../constants';
+import {
+  getLocalCustomers,
+  loadCustomers,
+  saveCustomers,
+} from '../data/customersDataAdapter';
 
 interface CustomerContextType {
   customers: Customer[];
@@ -14,13 +18,23 @@ const CustomerContext = createContext<CustomerContextType | undefined>(undefined
 
 export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [customers, setCustomers] = useState<Customer[]>(() => {
-    const saved = localStorage.getItem('molls_customers');
-    return saved ? JSON.parse(saved) : MOCK_CUSTOMERS;
+    return getLocalCustomers();
   });
 
   useEffect(() => {
-    localStorage.setItem('molls_customers', JSON.stringify(customers));
+    void saveCustomers(customers);
   }, [customers]);
+
+  useEffect(() => {
+    let mounted = true;
+    void loadCustomers().then((nextCustomers) => {
+      if (!mounted) return;
+      setCustomers(nextCustomers);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const addCustomer = (c: Omit<Customer, 'id' | 'loyaltyPoints'>) => {
     setCustomers(prev => [...prev, { ...c, id: crypto.randomUUID(), loyaltyPoints: 0 }]);

@@ -1,7 +1,11 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '../types';
-import { PRODUCTS } from '../constants';
+import {
+  getLocalProducts,
+  loadProducts,
+  saveProducts,
+} from '../data/productsDataAdapter';
 
 interface ProductContextType {
   products: Product[];
@@ -12,13 +16,23 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('molls_products');
-    return saved ? JSON.parse(saved) : PRODUCTS;
+    return getLocalProducts();
   });
 
   useEffect(() => {
-    localStorage.setItem('molls_products', JSON.stringify(products));
+    void saveProducts(products);
   }, [products]);
+
+  useEffect(() => {
+    let mounted = true;
+    void loadProducts().then((nextProducts) => {
+      if (!mounted) return;
+      setProducts(nextProducts);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <ProductContext.Provider value={{ products, updateProducts: setProducts }}>

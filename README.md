@@ -14,6 +14,12 @@ Cadre projet: voir [AGENTS.md](./AGENTS.md).
 - Node.js 20+ recommande
 - npm 10+ recommande
 
+## Configuration Frontend
+1. Copier `.env.example` vers `.env.local`.
+2. Variables disponibles:
+   `VITE_DATA_SOURCE=local|api` (defaut recommande: `local`)
+   `VITE_API_BASE_URL=http://localhost:4000/api` (utilise quand `VITE_DATA_SOURCE=api`)
+
 ## Lancement Local
 1. Installer les dependances:
    `npm install`
@@ -89,6 +95,6 @@ Note: `login` exige des utilisateurs actifs en base (`User`) avec `pinHash` rens
 - Les changements doivent rester incrementaux et testables.
 
 ## Prochaines Priorites
-1. Definir et implementer BL-014: contrats API prioritaires (auth/products/orders/inventory/customers)
-2. Ajouter couche data adapter cote frontend (localStorage/api) pour transition progressive
-3. Preparer plan de migration localStorage vers DB avec rollback operationnel
+1. Finaliser BL-016: plan de migration `localStorage` vers DB avec rollback operationnel
+2. Ajouter une premiere strategie de sync incrementale des donnees critiques
+3. Poser les tests de non-regression pour la bascule de source de donnees

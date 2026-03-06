@@ -3,10 +3,12 @@ import React from 'react';
 import { LayoutDashboard, ShoppingCart, ChefHat, Package, Users, Settings, Utensils, ClipboardList, Wallet, Moon, LogOut } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 import { useInventory } from '../context/InventoryContext';
+import { useDataSourceStatus } from '../data/useDataSourceStatus';
 
 const Sidebar: React.FC = () => {
   const { currentView, setCurrentView, truckSettings, currentUser, logout, hasPermission } = useSettings();
   const { ingredients } = useInventory();
+  const dataSourceStatus = useDataSourceStatus();
   
   const criticalStocksCount = ingredients.filter(i => i.currentStock <= i.minStock).length;
 
@@ -89,6 +91,17 @@ const Sidebar: React.FC = () => {
       </nav>
       
       <div className="p-6">
+        <div className="mb-3">
+          <span className={`inline-flex items-center px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider border ${
+            dataSourceStatus === 'api'
+              ? 'bg-[#54bb24]/20 text-white border-[#54bb24]/40'
+              : dataSourceStatus === 'fallback'
+                ? 'bg-yellow-500/20 text-white border-yellow-300/40'
+                : 'bg-white/10 text-white/80 border-white/20'
+          }`}>
+            Data: {dataSourceStatus}
+          </span>
+        </div>
         <div className="bg-black/20 p-4 rounded-3xl border border-white/10 flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-[#54bb24] flex items-center justify-center font-black text-xs text-white uppercase">
             {currentUser?.name.charAt(0)}{currentUser?.name.split(' ')[1]?.charAt(0)}

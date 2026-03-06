@@ -1,8 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Order, CartItem, PaymentMethod, ServiceMode, DailySession } from '../types';
-import { MOCK_ORDERS } from '../constants';
 import { buildGlobalBackupPayload, calculerTotaux, saveAutoBackup } from '../utils';
+import { getLocalOrdersState, loadOrdersState, saveOrdersState } from '../data/ordersDataAdapter';
 
 interface OrderContextType {
   orders: Order[];
@@ -17,26 +17,27 @@ interface OrderContextType {
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [orders, setOrders] = useState<Order[]>(() => {
-    const saved = localStorage.getItem('molls_orders');
-    return saved ? JSON.parse(saved) : MOCK_ORDERS;
-  });
-
-  const [currentSession, setCurrentSession] = useState<DailySession | null>(() => {
-    const saved = localStorage.getItem('molls_current_session');
-    return saved ? JSON.parse(saved) : null;
-  });
-
-  const [sessionsHistory, setSessionsHistory] = useState<DailySession[]>(() => {
-    const saved = localStorage.getItem('molls_sessions_history');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const localState = getLocalOrdersState();
+  const [orders, setOrders] = useState<Order[]>(localState.orders);
+  const [currentSession, setCurrentSession] = useState<DailySession | null>(localState.currentSession);
+  const [sessionsHistory, setSessionsHistory] = useState<DailySession[]>(localState.sessionsHistory);
 
   useEffect(() => {
-    localStorage.setItem('molls_orders', JSON.stringify(orders));
-    localStorage.setItem('molls_current_session', JSON.stringify(currentSession));
-    localStorage.setItem('molls_sessions_history', JSON.stringify(sessionsHistory));
+    void saveOrdersState({ orders, currentSession, sessionsHistory });
   }, [orders, currentSession, sessionsHistory]);
+
+  useEffect(() => {
+    let mounted = true;
+    void loadOrdersState().then((state) => {
+      if (!mounted) return;
+      setOrders(state.orders);
+      setCurrentSession(state.currentSession);
+      setSessionsHistory(state.sessionsHistory);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const openSession = (initialCash: number) => {
     const newSession: DailySession = {

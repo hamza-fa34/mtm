@@ -1,8 +1,12 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Ingredient, Purchase, Waste, RecipeItem } from '../types';
-import { INGREDIENTS } from '../constants';
 import { getProductStockStatus as getStatusUtil } from '../utils';
+import {
+  getLocalInventoryState,
+  loadInventoryState,
+  saveInventoryState,
+} from '../data/inventoryDataAdapter';
 
 interface InventoryContextType {
   ingredients: Ingredient[];
@@ -17,20 +21,25 @@ interface InventoryContextType {
 const InventoryContext = createContext<InventoryContextType | undefined>(undefined);
 
 export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [ingredients, setIngredients] = useState<Ingredient[]>(() => {
-    const saved = localStorage.getItem('molls_ingredients');
-    return saved ? JSON.parse(saved) : INGREDIENTS;
-  });
-
-  const [wastes, setWastes] = useState<Waste[]>(() => {
-    const saved = localStorage.getItem('molls_wastes');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const localState = getLocalInventoryState();
+  const [ingredients, setIngredients] = useState<Ingredient[]>(localState.ingredients);
+  const [wastes, setWastes] = useState<Waste[]>(localState.wastes);
 
   useEffect(() => {
-    localStorage.setItem('molls_ingredients', JSON.stringify(ingredients));
-    localStorage.setItem('molls_wastes', JSON.stringify(wastes));
+    void saveInventoryState({ ingredients, wastes });
   }, [ingredients, wastes]);
+
+  useEffect(() => {
+    let mounted = true;
+    void loadInventoryState().then((state) => {
+      if (!mounted) return;
+      setIngredients(state.ingredients);
+      setWastes(state.wastes);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const addIngredient = (ing: Omit<Ingredient, 'id'>) => {
     setIngredients(prev => [...prev, { ...ing, id: crypto.randomUUID() }]);

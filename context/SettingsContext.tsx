@@ -1,13 +1,12 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types';
-
-interface TruckSettings {
-  name: string;
-  slogan: string;
-  tvaEmporter: number;
-  tvaPlace: number;
-}
+import {
+  getLocalTruckSettings,
+  loadTruckSettings,
+  saveTruckSettings,
+  TruckSettings,
+} from '../data/settingsDataAdapter';
 
 interface SettingsContextType {
   truckSettings: TruckSettings;
@@ -43,19 +42,24 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   });
 
   const [truckSettings, setTruckSettings] = useState<TruckSettings>(() => {
-    const saved = localStorage.getItem('molls_settings');
-    return saved ? JSON.parse(saved) : { 
-      name: "Molly's Truck", 
-      slogan: "Les meilleurs burgers de la ville !", 
-      tvaEmporter: 5.5, 
-      tvaPlace: 10 
-    };
+    return getLocalTruckSettings();
   });
 
   useEffect(() => {
-    localStorage.setItem('molls_settings', JSON.stringify(truckSettings));
+    void saveTruckSettings(truckSettings);
     localStorage.setItem('molls_users', JSON.stringify(users));
   }, [truckSettings, users]);
+
+  useEffect(() => {
+    let mounted = true;
+    void loadTruckSettings().then((settings) => {
+      if (!mounted) return;
+      setTruckSettings(settings);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handlePinInput = (num: string) => {
     const newPin = pin + num;
