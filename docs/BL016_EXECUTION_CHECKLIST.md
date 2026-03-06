@@ -76,11 +76,11 @@ Checklist:
 Objectif: migration reelle orders (lecture API, ecriture locale au debut)
 
 Checklist:
-- [ ] Verifier mapping order/items/total/status/payment/serviceMode
-- [ ] Verifier POS/KDS non regressifs
-- [ ] Tester API vide/KO -> fallback local
-- [ ] Verifier numerotation tickets
-- [ ] Valider `npm run quality:ci`
+- [x] Verifier mapping order/items/total/status/payment/serviceMode
+- [x] Verifier POS/KDS non regressifs
+- [x] Tester API vide/KO -> fallback local
+- [x] Verifier numerotation tickets
+- [x] Valider `npm run quality:ci`
 - [ ] Commit: `feat(front): migrate orders with guarded fallback`
 - [ ] Push `origin/main`
 
