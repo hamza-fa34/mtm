@@ -15,8 +15,8 @@
 
 | Lot | Objectif | Statut (`TODO`/`IN_PROGRESS`/`DONE`) | GO/NO-GO |
 |---|---|---|---|
-| L1 | Orders write transactionnel | TODO | NO-GO |
-| L2 | Inventory write transactionnel | TODO | NO-GO |
+| L1 | Orders write transactionnel | IN_PROGRESS | NO-GO |
+| L2 | Inventory write transactionnel | IN_PROGRESS | NO-GO |
 | L3 | Sessions / End-of-Day transactionnel | TODO | NO-GO |
 | L4 | Auth/roles backend stricts | TODO | NO-GO |
 | L5 | Migration reelle local -> DB (cutover controle) | TODO | NO-GO |
@@ -39,13 +39,13 @@
 
 ## L2 - Inventory write transactionnel
 ### Checklist
-- [ ] Endpoint write achats (`purchase`) transactionnel
-- [ ] Endpoint write pertes (`waste`) transactionnel
-- [ ] Recalcul stock/cout coherent en transaction
-- [ ] Blocage stock negatif
-- [ ] Tests integration sur mouvements stock
+- [x] Endpoint write achats (`purchase`) transactionnel
+- [x] Endpoint write pertes (`waste`) transactionnel
+- [x] Recalcul stock/cout coherent en transaction
+- [x] Blocage stock negatif
+- [x] Tests integration sur mouvements stock
 - [ ] Validation manuelle ecrans inventory
-- [ ] Commit + push
+- [x] Commit + push
 ### Critere GO
 - [ ] Stock et cout moyen restent coherents apres scenarios d'achat/perte
 
