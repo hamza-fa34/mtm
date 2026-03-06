@@ -32,4 +32,4 @@
 | BL-018F | P5 | Observabilite minimale exploitable (alert policy + drill) | S | BL-018C | DONE |
 
 ## Prochaine Action Recommandee
-- Executer le drill incident pre-prod et archiver les preuves (GO/NO-GO) selon `docs/OBSERVABILITY_MINIMUM.md`.
+- Configurer `OPS_BASE_URL` dans les variables repository puis activer la surveillance via `ops-monitor.yml`.

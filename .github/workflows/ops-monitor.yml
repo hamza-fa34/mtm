@@ -1,0 +1,46 @@
+name: Ops Monitor
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Base URL for API (example: https://staging.example.com/api)"
+        required: false
+        type: string
+      retries:
+        description: "Retries per endpoint"
+        required: false
+        default: "2"
+        type: string
+      retry_delay_ms:
+        description: "Delay between retries (ms)"
+        required: false
+        default: "3000"
+        type: string
+      timeout_ms:
+        description: "Request timeout (ms)"
+        required: false
+        default: "8000"
+        type: string
+  schedule:
+    - cron: "*/10 * * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  health-readiness:
+    name: Health/Readiness monitor
+    runs-on: ubuntu-latest
+    env:
+      OPS_BASE_URL: ${{ inputs.base_url || vars.OPS_BASE_URL }}
+      OPS_RETRIES: ${{ inputs.retries || '2' }}
+      OPS_RETRY_DELAY_MS: ${{ inputs.retry_delay_ms || '3000' }}
+      OPS_TIMEOUT_MS: ${{ inputs.timeout_ms || '8000' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run ops health monitor
+        run: node scripts/ops-health-check.cjs

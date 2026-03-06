@@ -32,6 +32,7 @@ mtm/
 - `npm run docker:down`
 - `npm run db:backup:dump`
 - `npm run db:backup:restore -- ./backups/<file.dump>`
+- `node scripts/ops-health-check.cjs http://localhost:4000/api`
 
 ## Frontend (apps/web)
 Configuration:
@@ -72,6 +73,11 @@ URLs:
 - Minimum runbooks:
   - `docs/RUNBOOK_INCIDENT_RESPONSE.md`
   - `docs/OBSERVABILITY_MINIMUM.md`
+  - `docs/OBSERVABILITY_ALERT_MATRIX.md`
+
+Automated monitor:
+- Workflow: `.github/workflows/ops-monitor.yml`
+- Configure repo variable: `OPS_BASE_URL` (target API base URL, including `/api`)
 
 ## CI
 - Workflow: `.github/workflows/ci.yml`
