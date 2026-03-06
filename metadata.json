@@ -1,7 +1,0 @@
-{
-  "name": "Molly’s Truck Manager",
-  "description": "A comprehensive POS, CRM, and ERP solution specifically designed for food truck operations, featuring real-time inventory tracking, kitchen display system (KDS), and advanced sales reporting.",
-  "requestFramePermissions": [
-    "camera"
-  ]
-}
