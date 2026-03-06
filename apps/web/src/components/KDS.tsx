@@ -5,7 +5,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 // Contexts
-import { useOrders } from '../context/OrderContext';
+import { useOrders } from '../contexts/OrderContext';
 
 const KDS: React.FC = () => {
   const { orders, updateOrderStatus } = useOrders();

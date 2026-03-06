@@ -5,9 +5,9 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { formatPrix, calculerTotaux } from '../utils';
 
 // Contexts
-import { useOrders } from '../context/OrderContext';
-import { useInventory } from '../context/InventoryContext';
-import { useSettings } from '../context/SettingsContext';
+import { useOrders } from '../contexts/OrderContext';
+import { useInventory } from '../contexts/InventoryContext';
+import { useSettings } from '../contexts/SettingsContext';
 
 const Dashboard: React.FC = () => {
   const { orders, sessionsHistory } = useOrders();

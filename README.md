@@ -2,108 +2,67 @@
 
 Application metier pour food-truck: POS, KDS, stock, recettes/marges, CRM, sessions de caisse et depenses.
 
-## Etat Actuel
-- Frontend React + TypeScript + Vite
-- Persistance locale via `localStorage`
-- Mode stand-alone mono-appareil
-- Backend NestJS initialise (base `api`) + PostgreSQL Docker + Prisma migrate
+## Structure Monorepo
 
-Cadre projet: voir [AGENTS.md](./AGENTS.md).
+```text
+mtm/
+|- apps/
+|  |- web/      # Frontend React + Vite
+|  `- api/      # Backend NestJS + Prisma + PostgreSQL
+|- docs/
+|- infra/
+|  `- docker-compose.yml
+`- .github/workflows/
+```
 
 ## Prerequis
-- Node.js 20+ recommande
-- npm 10+ recommande
+- Node.js 20+
+- npm 10+
+- Docker + Docker Compose
 
-## Configuration Frontend
-1. Copier `.env.example` vers `.env.local`.
-2. Variables disponibles:
-   `VITE_DATA_SOURCE=local|api` (defaut recommande: `local`)
-   `VITE_API_BASE_URL=http://localhost:4000/api` (utilise quand `VITE_DATA_SOURCE=api`)
+## Commandes Racine
+- `npm run web:dev`
+- `npm run web:build`
+- `npm run web:quality:ci`
+- `npm run web:e2e`
+- `npm run api:build`
+- `npm run quality:ci` (web quality + api build)
+- `npm run docker:up`
+- `npm run docker:down`
 
-## Lancement Local
-1. Installer les dependances:
-   `npm install`
-2. Demarrer en developpement:
-   `npm run dev`
-3. Ouvrir:
-   `http://localhost:3000`
+## Frontend (apps/web)
+Configuration:
+1. Copier `apps/web/.env.example` vers `apps/web/.env.local`
+2. Variables principales:
+   - `VITE_DATA_SOURCE=local|api`
+   - `VITE_API_BASE_URL=http://localhost:4000/api`
 
-## Lancement Docker
-### Mode developpement
-1. Construire et demarrer:
-   `docker compose --profile fullstack up --build -d`
-   (equivalent historique: `docker compose --profile dev --profile backend up --build -d`)
-2. Ouvrir:
-   `http://localhost:3000`
-   `http://localhost:4000/api` (backend)
-   `http://localhost:4000/api/health` (health check DB)
-3. Arreter:
-   `docker compose --profile fullstack down`
+Lancement local:
+- `npm --prefix apps/web install`
+- `npm --prefix apps/web run dev`
 
-### API + DB seulement (sans frontend)
-1. Construire et demarrer:
-   `docker compose --profile backend up --build -d`
-2. Ouvrir:
-   `http://localhost:4000/api`
-3. Arreter:
-   `docker compose --profile backend down`
+## Backend (apps/api)
+Lancement local:
+- `npm --prefix apps/api install`
+- `npm --prefix apps/api run prisma:generate`
+- `npm --prefix apps/api run prisma:migrate:deploy`
+- `npm --prefix apps/api run start:dev`
 
-### Mode production (preview)
-1. Construire et demarrer:
-   `docker compose --profile prod --profile backend up --build`
-2. Ouvrir:
-   `http://localhost:4173`
-   `http://localhost:4001/api` (backend)
-   `http://localhost:4001/api/health` (health check DB)
-3. Arreter:
-   `docker compose --profile prod --profile backend down`
+## Docker (infra)
+Stack complete:
+- `docker compose -f infra/docker-compose.yml --profile fullstack up --build -d`
 
-## Scripts
-- `npm run dev`: demarrage local Vite
-- `npm run typecheck`: verification TypeScript (`tsc --noEmit`)
-- `npm run lint`: alias vers `typecheck`
-- `npm run test`: tests unitaires en mode watch
-- `npm run test:run`: execution one-shot des tests unitaires
-- `npm run build`: build production
-- `npm run preview`: previsualisation du build
-- `npm run quality:ci`: gate qualite local (`typecheck + tests + build`)
+Arret:
+- `docker compose -f infra/docker-compose.yml down`
 
-## Endpoints API Disponibles (V0 read-only)
-- `GET /api/health`
-- `GET /api/categories`
-- `GET /api/products`
-- `GET /api/settings`
-- `GET /api/orders`
-- `GET /api/inventory/ingredients`
-- `GET /api/inventory/purchases`
-- `GET /api/inventory/wastes`
-- `GET /api/customers`
+URLs:
+- Frontend: `http://localhost:3000`
+- API: `http://localhost:4000/api`
+- Health: `http://localhost:4000/api/health`
 
-## Endpoints Auth (JWT)
-- `POST /api/auth/login` body: `{ "pin": "1234" }`
-- `POST /api/auth/refresh` body: `{ "refreshToken": "<token>" }`
-- `GET /api/auth/me` header: `Authorization: Bearer <accessToken>`
-
-Note: `login` exige des utilisateurs actifs en base (`User`) avec `pinHash` renseigne.
-
-## Donnees et Sauvegarde
-- Les donnees sont stockees en local dans le navigateur (`localStorage`).
-- La sauvegarde/restauration globale JSON est planifiee en priorite `P0` (voir `AGENTS.md`).
-
-## Perimetre Fonctionnel (V1)
-- POS: prise de commande et encaissement
-- KDS: suivi preparation
-- Menu/recettes: produits, ingredients, couts
-- Stock: suivi et deduction via ventes
-- CRM: clients et fidelite
-- Sessions: ouverture/fermeture de caisse
-- Depenses: saisie et export CSV
-
-## Qualite
-- Build et type-check doivent passer avant toute livraison.
-- Les changements doivent rester incrementaux et testables.
-
-## Prochaines Priorites
-1. Finaliser BL-016: plan de migration `localStorage` vers DB avec rollback operationnel
-2. Ajouter une premiere strategie de sync incrementale des donnees critiques
-3. Poser les tests de non-regression pour la bascule de source de donnees
+## CI
+- Workflow: `.github/workflows/ci.yml`
+- Jobs:
+  - Frontend quality + e2e (`apps/web`)
+  - Backend build + Prisma + e2e (`apps/api`)
+  - Docker build front + api

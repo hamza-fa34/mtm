@@ -11,7 +11,7 @@ Finaliser la validation metier + technique BL-017 avant toute nouvelle evolution
 ## Pre-conditions (historique d'execution)
 - CI GitHub au vert sur `main`.
 - Environnement stable:
-  - Front: `npm run dev` ou Docker
+  - Front: `npm --prefix apps/web run dev` ou Docker
   - API + DB: Docker ou local, migrations Prisma appliquees
 - Jeu de test:
   - 1 compte `MANAGER`

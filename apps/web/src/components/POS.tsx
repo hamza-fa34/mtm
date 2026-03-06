@@ -5,11 +5,11 @@ import { Product, CartItem, ServiceMode, PaymentMethod, Variant } from '../types
 import { calculerTotaux, formatPrix } from '../utils';
 
 // Contexts
-import { useCategories } from '../context/CategoryContext';
-import { useInventory } from '../context/InventoryContext';
-import { useOrders } from '../context/OrderContext';
-import { useProducts } from '../context/ProductContext';
-import { useCustomers } from '../context/CustomerContext';
+import { useCategories } from '../contexts/CategoryContext';
+import { useInventory } from '../contexts/InventoryContext';
+import { useOrders } from '../contexts/OrderContext';
+import { useProducts } from '../contexts/ProductContext';
+import { useCustomers } from '../contexts/CustomerContext';
 
 const POS: React.FC = () => {
   const { categories } = useCategories();
