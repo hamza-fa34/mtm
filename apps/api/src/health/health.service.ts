@@ -13,4 +13,16 @@ export class HealthService {
       return false;
     }
   }
+
+  getConfigStatus(): 'ok' | 'invalid' {
+    const required = [
+      process.env.DATABASE_URL,
+      process.env.JWT_ACCESS_SECRET,
+      process.env.JWT_REFRESH_SECRET,
+      process.env.JWT_ACCESS_TTL,
+      process.env.JWT_REFRESH_TTL,
+    ];
+
+    return required.every((value) => Boolean(value)) ? 'ok' : 'invalid';
+  }
 }

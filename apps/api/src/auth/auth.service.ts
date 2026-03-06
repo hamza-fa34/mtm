@@ -41,7 +41,7 @@ export class AuthService {
         name: string;
         role: 'MANAGER' | 'STAFF';
       }>(refreshToken, {
-        secret: process.env.JWT_REFRESH_SECRET ?? 'mtm-refresh-dev-secret',
+        secret: process.env.JWT_REFRESH_SECRET as string,
       });
 
       const user = await this.prisma.user.findUnique({
@@ -75,8 +75,7 @@ export class AuthService {
       const pinHash = user.pinHash;
       const isBcrypt = pinHash.startsWith('$2a$') || pinHash.startsWith('$2b$');
       const allowPlainPinLogin =
-        process.env.ALLOW_PLAIN_PIN_LOGIN === 'true' ||
-        process.env.NODE_ENV !== 'production';
+        process.env.ALLOW_PLAIN_PIN_LOGIN === 'true';
       const isValid = isBcrypt
         ? await compare(pin, pinHash)
         : allowPlainPinLogin && pinHash === pin;
@@ -96,13 +95,13 @@ export class AuthService {
     };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      secret: process.env.JWT_ACCESS_SECRET ?? 'mtm-access-dev-secret',
-      expiresIn: (process.env.JWT_ACCESS_TTL as any) ?? '15m',
+      secret: process.env.JWT_ACCESS_SECRET as string,
+      expiresIn: process.env.JWT_ACCESS_TTL as any,
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: process.env.JWT_REFRESH_SECRET ?? 'mtm-refresh-dev-secret',
-      expiresIn: (process.env.JWT_REFRESH_TTL as any) ?? '7d',
+      secret: process.env.JWT_REFRESH_SECRET as string,
+      expiresIn: process.env.JWT_REFRESH_TTL as any,
     });
 
     return { accessToken, refreshToken };

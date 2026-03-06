@@ -14,6 +14,7 @@ Fournir une procedure courte pour diagnostiquer et contenir un incident producti
 ## Verification rapide
 - API health:
   - `GET /api/health`
+  - `GET /api/health/readiness`
 - Logs API:
   - `docker logs mtm_api_dev --tail 200`
   - Les logs sont JSON structures avec:
@@ -35,6 +36,9 @@ Fournir une procedure courte pour diagnostiquer et contenir un incident producti
 - Si API indisponible:
   1. Repasser frontend en `VITE_DATA_SOURCE=local`.
   2. Redemarrer `api` + `db`.
+- Si erreurs `429 Too Many Requests`:
+  1. Verifier `RATE_LIMIT_WINDOW_MS` et `RATE_LIMIT_MAX_REQUESTS`.
+  2. Ajuster en environnement non-prod si charge de test elevee.
 - Si ecriture critique incoherente:
   1. Bloquer temporairement les ecritures concernees (feature flag ou rollback release).
   2. Utiliser `dry-run` migration/import pour analyser l'etat avant correction.

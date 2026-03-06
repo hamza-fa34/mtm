@@ -30,6 +30,7 @@ export function requestContextMiddleware(
 
   res.on('finish', () => {
     writeStructuredLog({
+      timestamp: new Date().toISOString(),
       level: 'info',
       event: 'http_request',
       requestId,
