@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "api",
   "version": "0.0.1",
   "description": "",
@@ -19,6 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "config:sanity": "node scripts/config-sanity.cjs",
     "prisma:validate": "prisma validate",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
@@ -35,7 +36,8 @@
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
     "bcryptjs": "^3.0.3",
-    "passport": "^0.7.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",    "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
@@ -86,3 +88,4 @@
     "testEnvironment": "node"
   }
 }
+

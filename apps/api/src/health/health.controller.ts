@@ -22,4 +22,25 @@ export class HealthController {
 
     return payload;
   }
+
+  @Get('readiness')
+  async getReadiness() {
+    const databaseUp = await this.healthService.isDatabaseUp();
+    const configStatus = this.healthService.getConfigStatus();
+    const ready = databaseUp && configStatus === 'ok';
+    const payload = {
+      status: ready ? 'ready' : 'not_ready',
+      timestamp: new Date().toISOString(),
+      checks: {
+        database: databaseUp ? 'up' : 'down',
+        config: configStatus,
+      },
+    };
+
+    if (!ready) {
+      throw new ServiceUnavailableException(payload);
+    }
+
+    return payload;
+  }
 }

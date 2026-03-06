@@ -6,6 +6,20 @@ Definir une procedure simple de sauvegarde et restauration PostgreSQL pour MTM.
 ## Backup (dump)
 Depuis la racine du projet:
 
+Option recommandee (script npm):
+
+```bash
+npm run db:backup:dump
+```
+
+Variables optionnelles:
+- `DB_CONTAINER` (defaut: `mtm_db`)
+- `DB_USER` (defaut: `mtm`)
+- `DB_NAME` (defaut: `mtm`)
+- `DB_BACKUP_FILE` (nom de fichier backup, defaut timestamp auto)
+
+Option manuelle:
+
 ```bash
 docker exec mtm_db pg_dump -U mtm -d mtm -Fc -f /tmp/mtm.dump
 docker cp mtm_db:/tmp/mtm.dump ./backups/mtm_$(date +%Y%m%d_%H%M%S).dump
@@ -21,6 +35,18 @@ docker cp mtm_db:/tmp/mtm.sql ./backups/mtm_$(date +%Y%m%d_%H%M%S).sql
 ## Restore
 1. Arreter les ecritures applicatives.
 2. Restaurer vers une DB cible.
+
+Option recommandee (script npm):
+
+```bash
+npm run db:backup:restore -- ./backups/mtm_xxx.dump
+```
+
+Ou:
+
+```bash
+npm run db:backup:restore -- ./backups/mtm_xxx.sql
+```
 
 Format custom (`.dump`):
 
@@ -48,4 +74,3 @@ docker exec -i mtm_db psql -U mtm -d mtm -f /tmp/restore.sql
 - Conserver au moins:
   - 7 backups journaliers
   - 4 backups hebdomadaires
-
