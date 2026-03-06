@@ -23,8 +23,8 @@ Checklist:
 - [x] Tester API disponible
 - [x] Tester API indisponible (fallback local)
 - [x] Valider `npm run quality:ci`
-- [ ] Commit: `feat(front): migrate categories to adapter with fallback`
-- [ ] Push `origin/main`
+- [x] Commit: `feat(front): migrate categories to adapter with fallback` (`b07d4ef`)
+- [x] Push `origin/main`
 
 ## Lot 2 - Settings
 Objectif: consolider la bascule settings (deja active) et preparer write API en etape suivante
@@ -34,8 +34,8 @@ Checklist:
 - [x] Valider valeurs par defaut + fallback
 - [x] Verifier non-regression Sidebar/SettingsView
 - [x] Valider `npm run quality:ci`
-- [ ] Commit: `chore(front): harden settings migration checks`
-- [ ] Push `origin/main`
+- [x] Commit: `chore(front): harden settings migration checks` (`818bc97`)
+- [x] Push `origin/main`
 
 ## Lot 3 - Products
 Objectif: stabiliser lecture API des produits et compatibilite recette/variants
@@ -46,8 +46,8 @@ Checklist:
 - [x] Tester API vide -> fallback local
 - [x] Tester API KO -> fallback local
 - [x] Valider `npm run quality:ci`
-- [ ] Commit: `feat(front): harden products adapter migration`
-- [ ] Push `origin/main`
+- [x] Commit: `feat(front): harden products adapter migration` (`27da7af`)
+- [x] Push `origin/main`
 
 ## Lot 4 - Customers
 Objectif: stabiliser lecture API customers sans casser CRM/fidelite locale
@@ -57,8 +57,8 @@ Checklist:
 - [x] Verifier creation client locale toujours fonctionnelle
 - [x] Tester API vide/KO -> fallback local
 - [x] Valider `npm run quality:ci`
-- [ ] Commit: `feat(front): harden customers adapter migration`
-- [ ] Push `origin/main`
+- [x] Commit: `feat(front): harden customers adapter migration` (`49d8bb5`)
+- [x] Push `origin/main`
 
 ## Lot 5 - Inventory
 Objectif: migration reelle inventory (lecture API, ecriture locale au debut)
@@ -69,8 +69,8 @@ Checklist:
 - [x] Verifier statut stock produit
 - [x] Tester API vide/KO -> fallback local
 - [x] Valider `npm run quality:ci`
-- [ ] Commit: `feat(front): migrate inventory with guarded fallback`
-- [ ] Push `origin/main`
+- [x] Commit: `feat(front): migrate inventory with guarded fallback` (`bf5851d`)
+- [x] Push `origin/main`
 
 ## Lot 6 - Orders
 Objectif: migration reelle orders (lecture API, ecriture locale au debut)
@@ -81,8 +81,8 @@ Checklist:
 - [x] Tester API vide/KO -> fallback local
 - [x] Verifier numerotation tickets
 - [x] Valider `npm run quality:ci`
-- [ ] Commit: `feat(front): migrate orders with guarded fallback`
-- [ ] Push `origin/main`
+- [x] Commit: `feat(front): migrate orders with guarded fallback` (`2321f65`)
+- [x] Push `origin/main`
 
 ## Lot 7 - Sessions / End-of-Day
 Objectif: finaliser migration sessions sans perte data
@@ -93,8 +93,8 @@ Checklist:
 - [x] Verifier backup auto en cloture
 - [x] Verifier rollback complet via export/import JSON
 - [x] Valider `npm run quality:ci`
-- [ ] Commit: `feat(front): migrate sessions with rollback safeguards`
-- [ ] Push `origin/main`
+- [x] Commit: `feat(front): migrate sessions with rollback safeguards` (`47cbb95`)
+- [x] Push `origin/main`
 
 ## Procedure Commit + Push (a appliquer a chaque lot)
 1. `git add -A`
