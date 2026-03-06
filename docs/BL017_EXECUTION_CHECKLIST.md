@@ -16,12 +16,12 @@
 | Lot | Objectif | Statut (`TODO`/`IN_PROGRESS`/`DONE`) | GO/NO-GO |
 |---|---|---|---|
 | L1 | Orders write transactionnel | IN_PROGRESS | NO-GO |
-| L2 | Inventory write transactionnel | IN_PROGRESS | NO-GO |
-| L3 | Sessions / End-of-Day transactionnel | IN_PROGRESS | NO-GO |
-| L4 | Auth/roles backend stricts | IN_PROGRESS | NO-GO |
-| L5 | Migration reelle local -> DB (cutover controle) | IN_PROGRESS | NO-GO |
-| L6 | Tests integration + E2E critiques | IN_PROGRESS | NO-GO |
-| L7 | CI/CD minimale pro + observabilite + runbooks | IN_PROGRESS | NO-GO |
+| L2 | Inventory write transactionnel | DONE | GO |
+| L3 | Sessions / End-of-Day transactionnel | DONE | GO |
+| L4 | Auth/roles backend stricts | DONE | GO |
+| L5 | Migration reelle local -> DB (cutover controle) | DONE | GO |
+| L6 | Tests integration + E2E critiques | DONE | GO |
+| L7 | CI/CD minimale pro + observabilite + runbooks | DONE | GO |
 
 ---
 
@@ -32,12 +32,12 @@
 - [x] Verification session ouverte obligatoire
 - [x] Verification stock suffisant au moment de la commande
 - [x] Tests integration backend pour succes + echec atomique
-- [ ] Test concurrence: 2 commandes quasi simultanees sur stock limite
-- [ ] Validation manuelle POS -> KDS -> recap
+- [x] Test concurrence: 2 commandes quasi simultanees sur stock limite
+- [x] Validation manuelle POS -> KDS -> recap
 - [x] Commit + push
 ### Critere GO
 - [ ] Aucune commande incoherente observee sur 10 scenarios critiques
-- [ ] Aucune incoherence stock observee sous concurrence
+- [x] Aucune incoherence stock observee sous concurrence
 
 ## L2 - Inventory write transactionnel
 ### Checklist
@@ -46,10 +46,10 @@
 - [x] Recalcul stock/cout coherent en transaction
 - [x] Blocage stock negatif
 - [x] Tests integration sur mouvements stock
-- [ ] Validation manuelle ecrans inventory
+- [x] Validation manuelle ecrans inventory
 - [x] Commit + push
 ### Critere GO
-- [ ] Stock et cout moyen restent coherents apres scenarios d'achat/perte
+- [x] Stock et cout moyen restent coherents apres scenarios d'achat/perte
 
 ## L3 - Sessions / End-of-Day transactionnel
 ### Checklist
@@ -58,10 +58,10 @@
 - [x] Rapprochement total ventes / moyens de paiement / TVA
 - [x] Backup de secours maintenu
 - [x] Tests integration sur ouverture/fermeture et echec
-- [ ] Validation manuelle EndOfDay
+- [x] Validation manuelle EndOfDay
 - [x] Commit + push
 ### Critere GO
-- [ ] Cloture session fiable sans perte de donnees
+- [x] Cloture session fiable sans perte de donnees
 
 ## L4 - Auth / Roles backend stricts
 ### Checklist
@@ -72,31 +72,31 @@
 - [x] Tests integration auth/permission
 - [x] Commit + push
 ### Critere GO
-- [ ] Aucune action critique possible sans role autorise
+- [x] Aucune action critique possible sans role autorise
 
 ## L5 - Migration reelle local -> DB
 ### Checklist
 - [x] Script/import migration depuis export JSON
 - [x] Dry-run migration + rapport d'ecarts
-- [ ] Validation sur export JSON realiste (volume metier)
+- [x] Validation sur export JSON realiste (volume metier)
 - [x] Cutover par domaine (orders/inventory/sessions)
 - [x] Fallback local seulement en secours controle
 - [x] Procedure rollback data testee
 - [x] Commit + push
 ### Critere GO
-- [ ] Donnees historiques et donnees nouvelles coherentes apres cutover
+- [x] Donnees historiques et donnees nouvelles coherentes apres cutover
 
 ## L6 - Tests integration + E2E
 ### Checklist
 - [x] Suite integration backend (Jest + Supertest + DB test)
 - [x] Scenarios E2E critiques front (Playwright)
-- [ ] Test degradation reseau/API indisponible
+- [x] Test degradation reseau/API indisponible
 - [x] Scenarios manuels metier mis a jour
 - [x] Non-regression POS/KDS/session validee
 - [x] Commit + push
 ### Critere GO
-- [ ] Pipeline tests verte sur tous les flux critiques
-- [ ] Frontend degrade proprement quand API indisponible
+- [x] Pipeline tests verte sur tous les flux critiques
+- [x] Frontend degrade proprement quand API indisponible
 
 ## L7 - CI/CD + Observabilite + Runbooks
 ### Checklist
@@ -108,7 +108,7 @@
 - [x] Strategie backups DB (dump + restore teste)
 - [x] Commit + push
 ### Critere GO
-- [ ] Environnement exploitable avec diagnostics et rollback operationnels
+- [x] Environnement exploitable avec diagnostics et rollback operationnels
 
 ---
 
