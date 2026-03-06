@@ -41,11 +41,11 @@ Checklist:
 Objectif: stabiliser lecture API des produits et compatibilite recette/variants
 
 Checklist:
-- [ ] Verifier mapping `recipe`, `variants`, `loyaltyPrice`
-- [ ] Verifier affichage POS/Menu/KDS
-- [ ] Tester API vide -> fallback local
-- [ ] Tester API KO -> fallback local
-- [ ] Valider `npm run quality:ci`
+- [x] Verifier mapping `recipe`, `variants`, `loyaltyPrice`
+- [x] Verifier affichage POS/Menu/KDS
+- [x] Tester API vide -> fallback local
+- [x] Tester API KO -> fallback local
+- [x] Valider `npm run quality:ci`
 - [ ] Commit: `feat(front): harden products adapter migration`
 - [ ] Push `origin/main`
 
