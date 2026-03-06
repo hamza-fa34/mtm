@@ -22,7 +22,7 @@
 | BL-013 | P4 | Modele de donnees cible PostgreSQL | L | P0/P1 stabilises | DONE |
 | BL-014 | P4 | Contrats API prioritaires (auth/orders/products/inventory/customers) | L | BL-013 | DONE |
 | BL-015 | P4 | Couche abstraction data (local/api) | L | BL-014 | DONE |
-| BL-016 | P4 | Plan migration localStorage -> DB + rollback | M | BL-013, BL-015 | TODO |
+| BL-016 | P4 | Plan migration localStorage -> DB + rollback | M | BL-013, BL-015 | IN_PROGRESS |
 
 ## Prochaine Action Recommandee
-- Demarrer `BL-016`: plan de migration `localStorage -> DB` avec procedure rollback.
+- Executer `docs/BL016_EXECUTION_CHECKLIST.md` lot par lot, avec commit+push apres chaque etape.
