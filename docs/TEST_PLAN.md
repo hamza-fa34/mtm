@@ -36,6 +36,17 @@
 - Limite:
   - Les scenarios T03, T06, T07, T08, T09, T10 restent a valider manuellement.
 
+### Campagne 2026-03-06 - Smoke manuel utilisateur
+- Testeur: Hamza
+- Environnement: Docker fullstack
+- Resultat:
+  - Connexion PIN: OK
+  - Ouverture caisse/session: OK
+  - Prise de commandes POS: OK
+  - Fermeture puis reouverture session: OK
+- Limite:
+  - Validation formelle T01 -> T10 a finaliser dans le tableau de suivi ci-dessous.
+
 ## 3) Tableau de Suivi
 
 | ID | Scenario | Statut | Date | Notes |
