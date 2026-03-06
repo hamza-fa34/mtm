@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { PaymentMethod, ServiceMode } from '@prisma/client';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
@@ -8,5 +9,28 @@ export class OrdersController {
   @Get()
   async findAll() {
     return this.ordersService.findAll();
+  }
+
+  @Post()
+  async createOrder(
+    @Body()
+    body: {
+      items: Array<{
+        productId: string;
+        quantity: number;
+        unitPrice: number;
+        totalPrice: number;
+        variantName?: string;
+        isRedeemed?: boolean;
+        redeemedPoints?: number;
+      }>;
+      total: number;
+      paymentMethod: PaymentMethod;
+      serviceMode: ServiceMode;
+      customerId?: string;
+      sessionId?: string;
+    },
+  ) {
+    return this.ordersService.createOrder(body);
   }
 }

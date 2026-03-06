@@ -27,11 +27,11 @@
 
 ## L1 - Orders write transactionnel
 ### Checklist
-- [ ] Endpoint `POST /orders` transactionnel (Prisma `$transaction`)
+- [x] Endpoint `POST /orders` transactionnel (Prisma `$transaction`)
 - [ ] Idempotency key pour creation commande
-- [ ] Verification session ouverte obligatoire
-- [ ] Verification stock suffisant au moment de la commande
-- [ ] Tests integration backend pour succes + echec atomique
+- [x] Verification session ouverte obligatoire
+- [x] Verification stock suffisant au moment de la commande
+- [x] Tests integration backend pour succes + echec atomique
 - [ ] Validation manuelle POS -> KDS -> recap
 - [ ] Commit + push
 ### Critere GO
