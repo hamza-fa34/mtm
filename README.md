@@ -62,6 +62,16 @@ URLs:
 - Frontend: `http://localhost:3000`
 - API: `http://localhost:4000/api`
 - Health: `http://localhost:4000/api/health`
+- Readiness: `http://localhost:4000/api/health/readiness`
+
+## Observability (Minimum)
+- Structured logs are emitted by API for:
+  - `event=http_request`
+  - `event=http_error`
+- `x-request-id` is returned and reused for request/error correlation.
+- Minimum runbooks:
+  - `docs/RUNBOOK_INCIDENT_RESPONSE.md`
+  - `docs/OBSERVABILITY_MINIMUM.md`
 
 ## CI
 - Workflow: `.github/workflows/ci.yml`
