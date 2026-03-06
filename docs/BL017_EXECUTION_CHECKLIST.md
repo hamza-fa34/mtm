@@ -21,7 +21,7 @@
 | L4 | Auth/roles backend stricts | IN_PROGRESS | NO-GO |
 | L5 | Migration reelle local -> DB (cutover controle) | IN_PROGRESS | NO-GO |
 | L6 | Tests integration + E2E critiques | IN_PROGRESS | NO-GO |
-| L7 | CI/CD minimale pro + observabilite + runbooks | TODO | NO-GO |
+| L7 | CI/CD minimale pro + observabilite + runbooks | IN_PROGRESS | NO-GO |
 
 ---
 
@@ -95,13 +95,13 @@
 
 ## L7 - CI/CD + Observabilite + Runbooks
 ### Checklist
-- [ ] CI front (typecheck/test/build)
-- [ ] CI back (build/prisma validate/tests integration)
-- [ ] Build Docker front+api
-- [ ] Logs structures backend + gestion erreurs standardisee
-- [ ] Runbook incident + runbook rollback publies
-- [ ] Strategie backups DB (dump + restore teste)
-- [ ] Commit + push
+- [x] CI front (typecheck/test/build)
+- [x] CI back (build/prisma validate/tests integration)
+- [x] Build Docker front+api
+- [x] Logs structures backend + gestion erreurs standardisee
+- [x] Runbook incident + runbook rollback publies
+- [x] Strategie backups DB (dump + restore teste)
+- [x] Commit + push
 ### Critere GO
 - [ ] Environnement exploitable avec diagnostics et rollback operationnels
 
