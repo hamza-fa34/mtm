@@ -1,21 +1,28 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 import { SessionsService } from './sessions.service';
 
 @Controller('sessions')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
   @Get()
+  @Roles('MANAGER', 'STAFF')
   async findAll() {
     return this.sessionsService.findAll();
   }
 
   @Get('current')
+  @Roles('MANAGER', 'STAFF')
   async findCurrent() {
     return this.sessionsService.findCurrent();
   }
 
   @Post('open')
+  @Roles('MANAGER')
   async open(
     @Body()
     body: {
@@ -27,6 +34,7 @@ export class SessionsController {
   }
 
   @Post('close')
+  @Roles('MANAGER')
   async close(
     @Body()
     body: {
@@ -43,4 +51,3 @@ export class SessionsController {
     return this.sessionsService.close(body);
   }
 }
-

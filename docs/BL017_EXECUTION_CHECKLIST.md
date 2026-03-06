@@ -18,7 +18,7 @@
 | L1 | Orders write transactionnel | IN_PROGRESS | NO-GO |
 | L2 | Inventory write transactionnel | IN_PROGRESS | NO-GO |
 | L3 | Sessions / End-of-Day transactionnel | IN_PROGRESS | NO-GO |
-| L4 | Auth/roles backend stricts | TODO | NO-GO |
+| L4 | Auth/roles backend stricts | IN_PROGRESS | NO-GO |
 | L5 | Migration reelle local -> DB (cutover controle) | TODO | NO-GO |
 | L6 | Tests integration + E2E critiques | TODO | NO-GO |
 | L7 | CI/CD minimale pro + observabilite + runbooks | TODO | NO-GO |
@@ -63,12 +63,12 @@
 
 ## L4 - Auth / Roles backend stricts
 ### Checklist
-- [ ] Guards backend role-based sur endpoints critiques
-- [ ] Protection manager sur actions sensibles
-- [ ] PIN hash bcrypt uniquement (pas de fallback en clair en prod)
-- [ ] Reponses 401/403 homogenes
-- [ ] Tests integration auth/permission
-- [ ] Commit + push
+- [x] Guards backend role-based sur endpoints critiques
+- [x] Protection manager sur actions sensibles
+- [x] PIN hash bcrypt uniquement (pas de fallback en clair en prod)
+- [x] Reponses 401/403 homogenes
+- [x] Tests integration auth/permission
+- [x] Commit + push
 ### Critere GO
 - [ ] Aucune action critique possible sans role autorise
 

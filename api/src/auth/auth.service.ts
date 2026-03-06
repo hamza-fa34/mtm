@@ -74,7 +74,12 @@ export class AuthService {
     for (const user of users) {
       const pinHash = user.pinHash;
       const isBcrypt = pinHash.startsWith('$2a$') || pinHash.startsWith('$2b$');
-      const isValid = isBcrypt ? await compare(pin, pinHash) : pinHash === pin;
+      const allowPlainPinLogin =
+        process.env.ALLOW_PLAIN_PIN_LOGIN === 'true' ||
+        process.env.NODE_ENV !== 'production';
+      const isValid = isBcrypt
+        ? await compare(pin, pinHash)
+        : allowPlainPinLogin && pinHash === pin;
       if (isValid) {
         return user;
       }

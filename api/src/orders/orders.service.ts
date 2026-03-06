@@ -97,6 +97,9 @@ export class OrdersService {
   }
 
   async createOrder(input: CreateOrderInput) {
+    if (!input || typeof input !== 'object') {
+      throw new BadRequestException('Invalid payload');
+    }
     const normalizedIdempotencyKey =
       typeof input.idempotencyKey === 'string' &&
       input.idempotencyKey.trim().length > 0

@@ -57,6 +57,9 @@ export class InventoryService {
     totalPrice: number;
     date?: number;
   }) {
+    if (!input || typeof input !== 'object') {
+      throw new BadRequestException('Invalid payload');
+    }
     if (!input.ingredientId) {
       throw new BadRequestException('ingredientId is required');
     }
@@ -118,6 +121,9 @@ export class InventoryService {
     reason: string;
     date?: number;
   }) {
+    if (!input || typeof input !== 'object') {
+      throw new BadRequestException('Invalid payload');
+    }
     if (!input.ingredientId) {
       throw new BadRequestException('ingredientId is required');
     }

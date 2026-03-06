@@ -45,6 +45,9 @@ export class SessionsService {
   }
 
   async open(input: OpenSessionInput) {
+    if (!input || typeof input !== 'object') {
+      throw new BadRequestException('Invalid payload');
+    }
     if (!Number.isFinite(input.initialCash) || input.initialCash < 0) {
       throw new BadRequestException('initialCash must be >= 0');
     }
@@ -78,6 +81,9 @@ export class SessionsService {
   }
 
   async close(input: CloseSessionInput) {
+    if (!input || typeof input !== 'object') {
+      throw new BadRequestException('Invalid payload');
+    }
     if (!Number.isFinite(input.finalCash) || input.finalCash < 0) {
       throw new BadRequestException('finalCash must be >= 0');
     }
@@ -264,4 +270,3 @@ export class SessionsService {
     };
   }
 }
-

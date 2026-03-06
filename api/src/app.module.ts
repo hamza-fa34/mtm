@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { RolesGuard } from './auth/roles.guard';
 import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CustomersModule } from './customers/customers.module';
@@ -26,6 +27,6 @@ import { SessionsModule } from './sessions/sessions.module';
     SessionsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RolesGuard],
 })
 export class AppModule {}
