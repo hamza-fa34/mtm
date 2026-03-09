@@ -50,3 +50,20 @@ test('manager can close session and returns to dashboard', async ({ page }) => {
   await page.getByTestId('close-session-btn').click();
   await expect(page.getByText('Performance')).toBeVisible();
 });
+
+test('app degrades gracefully when API is unavailable', async ({ page }) => {
+  await page.route('**/api/**', async (route) => {
+    await route.abort();
+  });
+
+  await loginManager(page);
+  await expect(page.getByText(/data:\s*fallback/i)).toBeVisible();
+  await openSession(page);
+
+  await page.getByTestId('nav-pos').click();
+  await page.getByTestId('product-card-prod2').click();
+  await page.getByTestId('checkout-card').click();
+
+  await page.getByTestId('nav-kds').click();
+  await expect(page.getByTestId('kds-order-card').first()).toBeVisible();
+});

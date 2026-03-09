@@ -200,21 +200,20 @@ export class OrdersService {
           throw new ConflictException('Inventory data is incomplete');
         }
 
-        for (const ingredient of ingredients) {
-          const required = requiredByIngredient.get(ingredient.id) ?? 0;
-          const currentStock = Number(ingredient.currentStock);
-          if (currentStock < required) {
-            throw new ConflictException(
-              `Insufficient stock for ingredient ${ingredient.name}`,
-            );
-          }
-        }
-
         for (const [ingredientId, required] of requiredByIngredient.entries()) {
-          await tx.ingredient.update({
-            where: { id: ingredientId },
+          const updated = await tx.ingredient.updateMany({
+            where: {
+              id: ingredientId,
+              currentStock: { gte: required },
+            },
             data: { currentStock: { decrement: required } },
           });
+          if (updated.count !== 1) {
+            const ingredient = ingredients.find((item) => item.id === ingredientId);
+            throw new ConflictException(
+              `Insufficient stock for ingredient ${ingredient?.name ?? ingredientId}`,
+            );
+          }
         }
       }
 

@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 backups
+apps/web/test-results/
+apps/web/playwright-report/
 
 # Editor directories and files
 .vscode/*
