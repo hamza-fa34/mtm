@@ -33,6 +33,7 @@ npm --prefix apps/api run test:e2e
 - [x] Test concurrence backend valide:
   - cas observe apres correctif: `201 + 409`
   - stock final non negatif et coherent
+- [ ] Replay complet `fallback -> api` automatise en E2E UI (reste valide manuellement dans cette phase)
 
 ## Ordre d'execution recommande
 1. Auth + ouverture session

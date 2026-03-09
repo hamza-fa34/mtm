@@ -420,7 +420,7 @@ export async function writeSessionCloseApiFirstOrQueue(
 export async function replayPendingOrderWrites(pin?: string): Promise<void> {
   if (getDataSourceMode() !== 'api') return;
 
-  await replayOfflineQueue(offlineQueueStore, async (operation) => {
+  const report = await replayOfflineQueue(offlineQueueStore, async (operation) => {
     if (operation.domain === 'orders' && operation.action === 'create_order') {
       await executeOrderOfflineOperation(
         operation as OfflineOperation<CreateOrderWritePayload>,
@@ -436,4 +436,15 @@ export async function replayPendingOrderWrites(pin?: string): Promise<void> {
       );
     }
   });
+
+  if (report.attempted === 0) return;
+
+  if (report.failed > 0) {
+    setDomainDataSourceStatus('orders', 'fallback');
+    setDomainDataSourceStatus('sessions', 'fallback');
+    return;
+  }
+
+  setDomainDataSourceStatus('orders', 'api');
+  setDomainDataSourceStatus('sessions', 'api');
 }

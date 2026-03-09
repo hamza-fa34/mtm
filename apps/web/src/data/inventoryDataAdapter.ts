@@ -317,11 +317,20 @@ export async function writeWasteApiFirstOrQueue(
 export async function replayPendingInventoryWrites(pin?: string): Promise<void> {
   if (getDataSourceMode() !== 'api') return;
 
-  await replayOfflineQueue(offlineQueueStore, async (operation) => {
+  const report = await replayOfflineQueue(offlineQueueStore, async (operation) => {
     if (operation.domain !== 'inventory') return;
     await executeInventoryOfflineOperation(
       operation as OfflineOperation<PurchaseWritePayload | WasteWritePayload>,
       pin,
     );
   });
+
+  if (report.attempted === 0) return;
+
+  if (report.failed > 0) {
+    setDomainDataSourceStatus('inventory', 'fallback');
+    return;
+  }
+
+  setDomainDataSourceStatus('inventory', 'api');
 }

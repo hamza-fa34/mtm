@@ -21,12 +21,12 @@
 | 8. Gate final | IN_PROGRESS | Attente validation manuelle bloc 6 et signature GO/NO-GO |
 
 ## Incidents observes
-- Incident 1:
-- Incident 2:
+- Incident 1: test de concurrence live a revele initialement une survente (`201+201`, stock negatif).
+- Incident 2: aucun autre incident bloquant apres correctif.
 
 ## Actions correctives
-- Action 1:
-- Action 2:
+- Action 1: correction backend `orders` pour decrement stock atomique sous concurrence (`updateMany ... currentStock >= required`).
+- Action 2: ajout test e2e backend `prevents concurrent oversell on limited stock`.
 
 ## Decision finale
 - GO / NO-GO:
