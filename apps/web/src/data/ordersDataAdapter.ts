@@ -1,17 +1,42 @@
-import { MOCK_ORDERS } from '../constants';
+﻿import { MOCK_ORDERS } from '../constants';
 import { DailySession, Order } from '../types';
 import { getApiBaseUrl, getDataSourceMode } from './config';
 import { readJsonFromStorage, writeJsonToStorage } from './localStorage';
 import { setDomainDataSourceStatus } from './sourceStatus';
+import { authenticatedApiFetch } from './apiAuth';
+import {
+  createOfflineOperation,
+  enqueueOfflineOperation,
+  LocalStorageOfflineQueueStore,
+  OfflineOperation,
+  replayOfflineQueue,
+} from './offlineQueue';
 
 const ORDERS_KEY = 'molls_orders';
 const CURRENT_SESSION_KEY = 'molls_current_session';
 const SESSIONS_HISTORY_KEY = 'molls_sessions_history';
+const offlineQueueStore = new LocalStorageOfflineQueueStore();
 
 export interface OrdersState {
   orders: Order[];
   currentSession: DailySession | null;
   sessionsHistory: DailySession[];
+}
+
+export interface CreateOrderWritePayload {
+  items: Array<{
+    productId: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    variantName?: string;
+    isRedeemed?: boolean;
+    redeemedPoints?: number;
+  }>;
+  total: number;
+  paymentMethod: 'CASH' | 'CARD' | 'TR';
+  serviceMode: 'TAKEAWAY' | 'DINE_IN';
+  customerId?: string;
 }
 
 function safeNumber(value: unknown, fallback: number): number {
@@ -198,4 +223,66 @@ export async function saveOrdersState(state: OrdersState): Promise<void> {
   writeJsonToStorage(ORDERS_KEY, state.orders);
   writeJsonToStorage(CURRENT_SESSION_KEY, state.currentSession);
   writeJsonToStorage(SESSIONS_HISTORY_KEY, state.sessionsHistory);
+}
+
+async function executeOrderOfflineOperation(
+  operation: OfflineOperation<CreateOrderWritePayload>,
+  pin?: string,
+): Promise<void> {
+  const response = await authenticatedApiFetch(
+    '/orders',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        ...operation.payload,
+        idempotencyKey: operation.operationId,
+      }),
+    },
+    pin,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to create order via API (${response.status})`);
+  }
+}
+
+export async function writeOrderApiFirstOrQueue(
+  payload: CreateOrderWritePayload,
+  pin?: string,
+): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
+  if (getDataSourceMode() !== 'api') {
+    setDomainDataSourceStatus('orders', 'local');
+    return { queued: false, synced: false, operationId: 'local-mode' };
+  }
+
+  const operation = createOfflineOperation({
+    domain: 'orders',
+    action: 'create_order',
+    payload,
+  });
+
+  try {
+    await executeOrderOfflineOperation(operation, pin);
+    setDomainDataSourceStatus('orders', 'api');
+    return { queued: false, synced: true, operationId: operation.operationId };
+  } catch {
+    await enqueueOfflineOperation(offlineQueueStore, operation);
+    setDomainDataSourceStatus('orders', 'fallback');
+    return { queued: true, synced: false, operationId: operation.operationId };
+  }
+}
+
+export async function replayPendingOrderWrites(pin?: string): Promise<void> {
+  if (getDataSourceMode() !== 'api') return;
+
+  await replayOfflineQueue(offlineQueueStore, async (operation) => {
+    if (operation.domain !== 'orders' || operation.action !== 'create_order') {
+      return;
+    }
+
+    await executeOrderOfflineOperation(
+      operation as OfflineOperation<CreateOrderWritePayload>,
+      pin,
+    );
+  });
 }

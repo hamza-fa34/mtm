@@ -2,7 +2,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Order, CartItem, PaymentMethod, ServiceMode, DailySession } from '../types';
 import { buildGlobalBackupPayload, calculerTotaux, saveAutoBackup } from '../utils';
-import { getLocalOrdersState, loadOrdersState, saveOrdersState } from '../data/ordersDataAdapter';
+import {
+  getLocalOrdersState,
+  loadOrdersState,
+  replayPendingOrderWrites,
+  saveOrdersState,
+  writeOrderApiFirstOrQueue,
+} from '../data/ordersDataAdapter';
+import { useSettings } from './SettingsContext';
 
 interface OrderContextType {
   orders: Order[];
@@ -17,6 +24,7 @@ interface OrderContextType {
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { currentUser } = useSettings();
   const localState = getLocalOrdersState();
   const [orders, setOrders] = useState<Order[]>(localState.orders);
   const [currentSession, setCurrentSession] = useState<DailySession | null>(localState.currentSession);
@@ -38,6 +46,19 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    const onOnline = () => {
+      void replayPendingOrderWrites(currentUser?.pin);
+    };
+
+    window.addEventListener('online', onOnline);
+    void replayPendingOrderWrites(currentUser?.pin);
+
+    return () => {
+      window.removeEventListener('online', onOnline);
+    };
+  }, [currentUser?.pin]);
 
   const openSession = (initialCash: number) => {
     const newSession: DailySession = {
@@ -96,6 +117,23 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       customerId
     };
     setOrders(prev => [newOrder, ...prev]);
+
+    const orderWritePayload = {
+      items: items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        totalPrice: item.totalPrice,
+        variantName: item.selectedVariant?.name,
+        isRedeemed: item.isRedeemed,
+        redeemedPoints: item.isRedeemed ? 100 : undefined,
+      })),
+      total,
+      paymentMethod,
+      serviceMode,
+      customerId,
+    };
+    void writeOrderApiFirstOrQueue(orderWritePayload, currentUser?.pin);
 
     if (currentSession) {
       const orderTotals = calculerTotaux(items);
