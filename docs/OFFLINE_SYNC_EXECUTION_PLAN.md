@@ -140,4 +140,5 @@ Retirer progressivement le mode `local` comme mode metier principal.
 - Lot 2: termine (orders ecriture API-first + queue + replay)
 - Lot 3: termine (inventory ecriture API-first + queue + replay)
 - Lot 4: termine (sessions open/close API-first + queue + replay)
-- Lot 5: en cours (lecture auth protegee sur endpoints securises + reduction du local metier)
+- Lot 5: implemente techniquement (mode nominal `api`, lectures/ecritures critiques alignees API-first, local conserve en mode legacy/rollback)
+- Validation finale restante: campagne metier GO/NO-GO complete en mode `api` + scenarios degrade/reconnexion

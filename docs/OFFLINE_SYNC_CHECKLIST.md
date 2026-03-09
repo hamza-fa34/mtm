@@ -10,8 +10,8 @@ Regle: aucun lot suivant sans validation GO du lot courant.
 - [x] Lot 2 implemente et valide techniquement
 - [x] Lot 3 implemente et valide techniquement
 - [x] Lot 4 implemente et valide techniquement
-- [~] Lot 5 en cours (lectures securisees + mode nominal `api` + nettoyage progressif local metier)
-- [ ] Validation metier finale GO/NO-GO a rejouer completement
+- [x] Lot 5 implemente techniquement (mode nominal `api`, local conserve en legacy/rollback)
+- [ ] Validation metier finale GO/NO-GO a rejouer completement (mode `api` + offline degrade/reconnexion)
 
 ## Checklist globale GO/NO-GO
 - [ ] PostgreSQL confirme comme source de verite metier
