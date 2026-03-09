@@ -62,6 +62,8 @@ describe('offlineQueue foundations', () => {
     expect(remaining).toHaveLength(1);
     expect(remaining[0].status).toBe('failed');
     expect(remaining[0].retryCount).toBe(1);
+    expect(typeof remaining[0].nextAttemptAt).toBe('number');
+    expect((remaining[0].nextAttemptAt ?? 0) > Date.now()).toBe(true);
     expect(remaining[0].lastError).toContain('network down');
     expect(report.attempted).toBe(1);
     expect(report.synced).toBe(0);
@@ -73,5 +75,28 @@ describe('offlineQueue foundations', () => {
     expect(computeBackoffDelay(2)).toBe(1000);
     expect(computeBackoffDelay(3)).toBe(2000);
     expect(computeBackoffDelay(10)).toBe(10000);
+  });
+
+  it('skips replay when backoff window has not elapsed', async () => {
+    const store = new InMemoryOfflineQueueStore();
+    const operation = createOfflineOperation({
+      domain: 'orders',
+      action: 'create_order',
+      payload: { orderNumber: '1002' },
+    });
+
+    await store.upsert({
+      ...operation,
+      status: 'failed',
+      retryCount: 1,
+      nextAttemptAt: Date.now() + 60_000,
+    });
+
+    const report = await replayOfflineQueue(store, async () => {
+      throw new Error('should not execute');
+    });
+
+    expect(report.attempted).toBe(0);
+    expect(report.skipped).toBe(1);
   });
 });

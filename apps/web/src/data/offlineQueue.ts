@@ -20,6 +20,7 @@ export interface OfflineOperation<TPayload = unknown> {
   retryCount: number;
   createdAt: number;
   updatedAt: number;
+  nextAttemptAt?: number;
   lastError?: string;
 }
 
@@ -149,6 +150,7 @@ export async function enqueueOfflineOperation(
   const next: OfflineOperation = {
     ...operation,
     status: 'pending',
+    nextAttemptAt: undefined,
     updatedAt: now(),
   };
   await store.upsert(next);
@@ -166,6 +168,7 @@ export async function replayOfflineQueue(
     skipped: 0,
   };
 
+  const currentTs = now();
   const operations = await store.list();
   for (const operation of operations) {
     if (
@@ -178,6 +181,14 @@ export async function replayOfflineQueue(
     }
 
     if (operation.retryCount >= config.maxRetries) {
+      report.skipped += 1;
+      continue;
+    }
+    if (
+      typeof operation.nextAttemptAt === 'number' &&
+      Number.isFinite(operation.nextAttemptAt) &&
+      operation.nextAttemptAt > currentTs
+    ) {
       report.skipped += 1;
       continue;
     }
@@ -196,10 +207,12 @@ export async function replayOfflineQueue(
       report.synced += 1;
     } catch (error) {
       const nextRetryCount = operation.retryCount + 1;
+      const delayMs = computeBackoffDelay(nextRetryCount, config);
       await store.upsert({
         ...operation,
         status: 'failed',
         retryCount: nextRetryCount,
+        nextAttemptAt: now() + delayMs,
         lastError: toErrorMessage(error),
         updatedAt: now(),
       });
