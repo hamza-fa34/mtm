@@ -7,6 +7,7 @@ type DataDomain =
   | 'products'
   | 'customers'
   | 'orders'
+  | 'sessions'
   | 'inventory';
 
 const domainStatus: Partial<Record<DataDomain, DataSourceRuntimeStatus>> = {};

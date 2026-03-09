@@ -261,14 +261,17 @@ export async function loadOrdersState(pin?: string): Promise<OrdersState> {
       writeJsonToStorage(SESSIONS_HISTORY_KEY, next.sessionsHistory);
 
       setDomainDataSourceStatus('orders', 'api');
+      setDomainDataSourceStatus('sessions', 'api');
       return next;
     } catch {
       setDomainDataSourceStatus('orders', 'fallback');
+      setDomainDataSourceStatus('sessions', 'fallback');
       return local;
     }
   }
 
   setDomainDataSourceStatus('orders', 'local');
+  setDomainDataSourceStatus('sessions', 'local');
   return local;
 }
 
@@ -367,7 +370,7 @@ export async function writeSessionOpenApiFirstOrQueue(
   pin?: string,
 ): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
   if (getDataSourceMode() !== 'api') {
-    setDomainDataSourceStatus('orders', 'local');
+    setDomainDataSourceStatus('sessions', 'local');
     return { queued: false, synced: false, operationId: 'local-mode' };
   }
 
@@ -379,11 +382,11 @@ export async function writeSessionOpenApiFirstOrQueue(
 
   try {
     await executeSessionOfflineOperation(operation, pin);
-    setDomainDataSourceStatus('orders', 'api');
+    setDomainDataSourceStatus('sessions', 'api');
     return { queued: false, synced: true, operationId: operation.operationId };
   } catch {
     await enqueueOfflineOperation(offlineQueueStore, operation);
-    setDomainDataSourceStatus('orders', 'fallback');
+    setDomainDataSourceStatus('sessions', 'fallback');
     return { queued: true, synced: false, operationId: operation.operationId };
   }
 }
@@ -393,7 +396,7 @@ export async function writeSessionCloseApiFirstOrQueue(
   pin?: string,
 ): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
   if (getDataSourceMode() !== 'api') {
-    setDomainDataSourceStatus('orders', 'local');
+    setDomainDataSourceStatus('sessions', 'local');
     return { queued: false, synced: false, operationId: 'local-mode' };
   }
 
@@ -405,11 +408,11 @@ export async function writeSessionCloseApiFirstOrQueue(
 
   try {
     await executeSessionOfflineOperation(operation, pin);
-    setDomainDataSourceStatus('orders', 'api');
+    setDomainDataSourceStatus('sessions', 'api');
     return { queued: false, synced: true, operationId: operation.operationId };
   } catch {
     await enqueueOfflineOperation(offlineQueueStore, operation);
-    setDomainDataSourceStatus('orders', 'fallback');
+    setDomainDataSourceStatus('sessions', 'fallback');
     return { queued: true, synced: false, operationId: operation.operationId };
   }
 }
