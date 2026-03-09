@@ -44,6 +44,8 @@ Configuration:
 Lancement local:
 - `npm --prefix apps/web install`
 - `npm --prefix apps/web run dev`
+- E2E web (deterministe): `npm --prefix apps/web run e2e` (mode `local` par defaut)
+- E2E web en mode API: `VITE_DATA_SOURCE=api npm --prefix apps/web run e2e`
 
 ## Backend (apps/api)
 Lancement local:
@@ -55,6 +57,8 @@ Lancement local:
 ## Docker (infra)
 Stack complete:
 - `docker compose -f infra/docker-compose.yml --profile fullstack up --build -d`
+- Par defaut, le frontend tourne en `VITE_DATA_SOURCE=api` (mode nominal PostgreSQL).
+- Override possible (legacy/diagnostic): `VITE_DATA_SOURCE=local docker compose -f infra/docker-compose.yml --profile fullstack up --build -d`
 
 Arret:
 - `docker compose -f infra/docker-compose.yml down`

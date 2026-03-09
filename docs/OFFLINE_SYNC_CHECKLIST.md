@@ -12,6 +12,8 @@ Regle: aucun lot suivant sans validation GO du lot courant.
 - [x] Lot 4 implemente et valide techniquement
 - [x] Lot 5 implemente techniquement (mode nominal `api`, local conserve en legacy/rollback)
 - [ ] Validation metier finale GO/NO-GO a rejouer completement (mode `api` + offline degrade/reconnexion)
+- [x] Replay offline avec fenetre de retry/backoff effective (tentatives differees via `nextAttemptAt`)
+- [x] Compose fullstack aligne sur mode nominal `api` par defaut
 
 ## Checklist globale GO/NO-GO
 - [ ] PostgreSQL confirme comme source de verite metier
@@ -47,7 +49,7 @@ Regle: aucun lot suivant sans validation GO du lot courant.
 ### 4. Validation offline sync
 - [ ] Operation capturee dans la queue en mode offline
 - [ ] Replay automatique a la reconnexion
-- [ ] Statut operation passe a `synced` en cas de succes
+- [ ] Operation retiree de la queue en cas de succes (equivalent `synced`)
 - [ ] Statut operation passe a `failed` si erreur fonctionnelle
 - [ ] Aucun doublon en backend apres replay
 
