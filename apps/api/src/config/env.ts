@@ -64,7 +64,7 @@ export function loadRuntimeEnv(): RuntimeEnv {
       process.env.ALLOW_PLAIN_PIN_LOGIN ?? 'true';
     process.env.CORS_ALLOWED_ORIGINS =
       process.env.CORS_ALLOWED_ORIGINS ??
-      'http://localhost:3000,http://127.0.0.1:3000';
+      'http://localhost:3000,http://127.0.0.1:3000,http://localhost:4173,http://127.0.0.1:4173';
   } else {
     process.env.ALLOW_PLAIN_PIN_LOGIN =
       process.env.ALLOW_PLAIN_PIN_LOGIN ?? 'false';
