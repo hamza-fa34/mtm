@@ -13,6 +13,21 @@ Cette campagne cloture la phase technique offline-sync avant toute nouvelle evol
 - Compte `MANAGER` et `STAFF` disponibles.
 - Jeu de donnees realiste (pas mini seed).
 
+## Validation auto (pre-run)
+- [x] `npm run quality:ci`
+- [x] Backend e2e en conditions CI-like (env + migrations + e2e):
+
+```powershell
+$env:DATABASE_URL='postgresql://mtm:mtm@localhost:5432/mtm'
+$env:JWT_ACCESS_SECRET='mtm-access-dev-secret'
+$env:JWT_REFRESH_SECRET='mtm-refresh-dev-secret'
+$env:JWT_ACCESS_TTL='15m'
+$env:JWT_REFRESH_TTL='7d'
+$env:ALLOW_PLAIN_PIN_LOGIN='true'
+npm --prefix apps/api run prisma:migrate:deploy
+npm --prefix apps/api run test:e2e
+```
+
 ## Ordre d'execution recommande
 1. Auth + ouverture session
 2. Flux commandes POS/KDS
@@ -65,6 +80,7 @@ Cette campagne cloture la phase technique offline-sync avant toute nouvelle evol
 
 ### 8) Gate final
 - [ ] `npm run quality:ci` vert
+- [ ] `npm --prefix apps/api run test:e2e` vert (avec env CI-like ci-dessus)
 - [ ] Aucun bug bloquant ouvert
 - [ ] GO/NO-GO renseigne
 
