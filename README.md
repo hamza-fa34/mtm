@@ -38,7 +38,7 @@ mtm/
 Configuration:
 1. Copier `apps/web/.env.example` vers `apps/web/.env.local`
 2. Variables principales:
-   - `VITE_DATA_SOURCE=local|api`
+   - `VITE_DATA_SOURCE=api|local` (recommande: `api`, `local` = mode legacy/rollback)
    - `VITE_API_BASE_URL=http://localhost:4000/api`
 
 Lancement local:
