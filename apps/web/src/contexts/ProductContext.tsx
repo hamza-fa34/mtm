@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Product } from '../types';
 import {
   getLocalProducts,
@@ -18,8 +18,13 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [products, setProducts] = useState<Product[]>(() => {
     return getLocalProducts();
   });
+  const isHydratingRef = useRef(false);
 
   useEffect(() => {
+    if (isHydratingRef.current) {
+      isHydratingRef.current = false;
+      return;
+    }
     void saveProducts(products);
   }, [products]);
 
@@ -27,6 +32,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     let mounted = true;
     void loadProducts().then((nextProducts) => {
       if (!mounted) return;
+      isHydratingRef.current = true;
       setProducts(nextProducts);
     });
     return () => {

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Category } from '../types';
 import {
   getLocalCategories,
@@ -15,8 +15,13 @@ const CategoryContext = createContext<CategoryContextType | undefined>(undefined
 
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [categories, setCategories] = useState<Category[]>(() => getLocalCategories());
+  const isHydratingRef = useRef(false);
 
   useEffect(() => {
+    if (isHydratingRef.current) {
+      isHydratingRef.current = false;
+      return;
+    }
     void saveCategories(categories);
   }, [categories]);
 
@@ -24,6 +29,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     let mounted = true;
     void loadCategories().then((nextCategories) => {
       if (!mounted) return;
+      isHydratingRef.current = true;
       setCategories(nextCategories);
     });
     return () => {

@@ -72,4 +72,8 @@ export async function loadCustomers(): Promise<Customer[]> {
 
 export async function saveCustomers(customers: Customer[]): Promise<void> {
   writeJsonToStorage(CUSTOMERS_STORAGE_KEY, customers);
+  setDomainDataSourceStatus(
+    'customers',
+    getDataSourceMode() === 'api' ? 'fallback' : 'local',
+  );
 }

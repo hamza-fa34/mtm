@@ -88,4 +88,8 @@ export async function loadProducts(): Promise<Product[]> {
 
 export async function saveProducts(products: Product[]): Promise<void> {
   writeJsonToStorage(PRODUCTS_STORAGE_KEY, products);
+  setDomainDataSourceStatus(
+    'products',
+    getDataSourceMode() === 'api' ? 'fallback' : 'local',
+  );
 }

@@ -74,4 +74,8 @@ export async function loadTruckSettings(): Promise<TruckSettings> {
 export async function saveTruckSettings(settings: TruckSettings): Promise<void> {
   const sanitized = sanitizeTruckSettings(settings);
   writeJsonToStorage(SETTINGS_STORAGE_KEY, sanitized);
+  setDomainDataSourceStatus(
+    'settings',
+    getDataSourceMode() === 'api' ? 'fallback' : 'local',
+  );
 }

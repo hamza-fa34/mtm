@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Customer } from '../types';
 import {
   getLocalCustomers,
@@ -20,8 +20,13 @@ export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [customers, setCustomers] = useState<Customer[]>(() => {
     return getLocalCustomers();
   });
+  const isHydratingRef = useRef(false);
 
   useEffect(() => {
+    if (isHydratingRef.current) {
+      isHydratingRef.current = false;
+      return;
+    }
     void saveCustomers(customers);
   }, [customers]);
 
@@ -29,6 +34,7 @@ export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     let mounted = true;
     void loadCustomers().then((nextCustomers) => {
       if (!mounted) return;
+      isHydratingRef.current = true;
       setCustomers(nextCustomers);
     });
     return () => {

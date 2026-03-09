@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { User, UserRole } from '../types';
 import {
   getLocalTruckSettings,
@@ -44,8 +44,14 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [truckSettings, setTruckSettings] = useState<TruckSettings>(() => {
     return getLocalTruckSettings();
   });
+  const isHydratingSettingsRef = useRef(false);
 
   useEffect(() => {
+    if (isHydratingSettingsRef.current) {
+      isHydratingSettingsRef.current = false;
+      localStorage.setItem('molls_users', JSON.stringify(users));
+      return;
+    }
     void saveTruckSettings(truckSettings);
     localStorage.setItem('molls_users', JSON.stringify(users));
   }, [truckSettings, users]);
@@ -54,6 +60,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     let mounted = true;
     void loadTruckSettings().then((settings) => {
       if (!mounted) return;
+      isHydratingSettingsRef.current = true;
       setTruckSettings(settings);
     });
     return () => {
