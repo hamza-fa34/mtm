@@ -38,7 +38,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     let mounted = true;
-    void loadOrdersState().then((state) => {
+    void loadOrdersState(currentUser?.pin).then((state) => {
       if (!mounted) return;
       setOrders(state.orders);
       setCurrentSession(state.currentSession);
@@ -47,7 +47,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [currentUser?.pin]);
 
   useEffect(() => {
     const onOnline = () => {

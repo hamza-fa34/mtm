@@ -38,7 +38,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   useEffect(() => {
     let mounted = true;
-    void loadInventoryState().then((state) => {
+    void loadInventoryState(currentUser?.pin).then((state) => {
       if (!mounted) return;
       setIngredients(state.ingredients);
       setPurchases(state.purchases);
@@ -47,7 +47,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [currentUser?.pin]);
 
   useEffect(() => {
     const onOnline = () => {

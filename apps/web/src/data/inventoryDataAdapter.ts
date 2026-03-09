@@ -1,6 +1,6 @@
 ﻿import { INGREDIENTS } from '../constants';
 import { Ingredient, Purchase, Waste } from '../types';
-import { getApiBaseUrl, getDataSourceMode } from './config';
+import { getDataSourceMode } from './config';
 import { readJsonFromStorage, writeJsonToStorage } from './localStorage';
 import { setDomainDataSourceStatus } from './sourceStatus';
 import { authenticatedApiFetch } from './apiAuth';
@@ -115,11 +115,11 @@ export function getLocalInventoryState(): InventoryState {
   };
 }
 
-async function fetchInventoryFromApi(): Promise<InventoryState> {
+async function fetchInventoryFromApi(pin?: string): Promise<InventoryState> {
   const [ingredientsRes, purchasesRes, wastesRes] = await Promise.all([
-    fetch(`${getApiBaseUrl()}/inventory/ingredients`),
-    fetch(`${getApiBaseUrl()}/inventory/purchases`),
-    fetch(`${getApiBaseUrl()}/inventory/wastes`),
+    authenticatedApiFetch('/inventory/ingredients', {}, pin),
+    authenticatedApiFetch('/inventory/purchases', {}, pin),
+    authenticatedApiFetch('/inventory/wastes', {}, pin),
   ]);
 
   if (!ingredientsRes.ok) {
@@ -185,11 +185,11 @@ async function fetchInventoryFromApi(): Promise<InventoryState> {
   };
 }
 
-export async function loadInventoryState(): Promise<InventoryState> {
+export async function loadInventoryState(pin?: string): Promise<InventoryState> {
   const local = getLocalInventoryState();
   if (getDataSourceMode() === 'api') {
     try {
-      const apiState = await fetchInventoryFromApi();
+      const apiState = await fetchInventoryFromApi(pin);
       const hasApiData =
         apiState.ingredients.length > 0 ||
         apiState.purchases.length > 0 ||

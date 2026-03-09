@@ -1,6 +1,6 @@
 ﻿import { MOCK_ORDERS } from '../constants';
 import { DailySession, Order } from '../types';
-import { getApiBaseUrl, getDataSourceMode } from './config';
+import { getDataSourceMode } from './config';
 import { readJsonFromStorage, writeJsonToStorage } from './localStorage';
 import { setDomainDataSourceStatus } from './sourceStatus';
 import { authenticatedApiFetch } from './apiAuth';
@@ -199,8 +199,8 @@ export function getLocalOrdersState(): OrdersState {
   };
 }
 
-async function fetchOrdersFromApi(): Promise<Order[]> {
-  const response = await fetch(`${getApiBaseUrl()}/orders`);
+async function fetchOrdersFromApi(pin?: string): Promise<Order[]> {
+  const response = await authenticatedApiFetch('/orders', {}, pin);
   if (!response.ok) {
     throw new Error(`Failed to fetch orders from API (${response.status})`);
   }
@@ -209,13 +209,15 @@ async function fetchOrdersFromApi(): Promise<Order[]> {
   return list.map((item, index) => sanitizeOrder(item, index));
 }
 
-async function fetchSessionsFromApi(): Promise<{
+async function fetchSessionsFromApiAuthenticated(
+  pin?: string,
+): Promise<{
   currentSession: DailySession | null;
   sessionsHistory: DailySession[];
 }> {
   const [currentRes, historyRes] = await Promise.all([
-    fetch(`${getApiBaseUrl()}/sessions/current`),
-    fetch(`${getApiBaseUrl()}/sessions`),
+    authenticatedApiFetch('/sessions/current', {}, pin),
+    authenticatedApiFetch('/sessions', {}, pin),
   ]);
 
   if (!currentRes.ok) {
@@ -236,13 +238,13 @@ async function fetchSessionsFromApi(): Promise<{
   };
 }
 
-export async function loadOrdersState(): Promise<OrdersState> {
+export async function loadOrdersState(pin?: string): Promise<OrdersState> {
   const local = getLocalOrdersState();
   if (getDataSourceMode() === 'api') {
     try {
       const [apiOrders, apiSessions] = await Promise.all([
-        fetchOrdersFromApi(),
-        fetchSessionsFromApi(),
+        fetchOrdersFromApi(pin),
+        fetchSessionsFromApiAuthenticated(pin),
       ]);
 
       const next: OrdersState = {
