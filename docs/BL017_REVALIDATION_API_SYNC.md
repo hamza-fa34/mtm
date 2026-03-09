@@ -28,6 +28,12 @@ npm --prefix apps/api run prisma:migrate:deploy
 npm --prefix apps/api run test:e2e
 ```
 
+- [x] Frontend E2E (Playwright): `npm --prefix apps/web run e2e`
+- [x] Test degradation UI automatise (API indisponible simulee): `Data: fallback` + flux POS/KDS maintenu
+- [x] Test concurrence backend valide:
+  - cas observe apres correctif: `201 + 409`
+  - stock final non negatif et coherent
+
 ## Ordre d'execution recommande
 1. Auth + ouverture session
 2. Flux commandes POS/KDS
