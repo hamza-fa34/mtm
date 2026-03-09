@@ -5,6 +5,14 @@ Checklist de pilotage pour executer le chantier offline sync par lots, sans cass
 
 Regle: aucun lot suivant sans validation GO du lot courant.
 
+## Etat actuel (2026-03-09)
+- [x] Lot 1 implemente et valide techniquement
+- [x] Lot 2 implemente et valide techniquement
+- [x] Lot 3 implemente et valide techniquement
+- [x] Lot 4 implemente et valide techniquement
+- [~] Lot 5 demarre (lectures securisees + nettoyage progressif local metier)
+- [ ] Validation metier finale GO/NO-GO a rejouer completement
+
 ## Checklist globale GO/NO-GO
 - [ ] PostgreSQL confirme comme source de verite metier
 - [ ] Ecritures critiques passent en API-first

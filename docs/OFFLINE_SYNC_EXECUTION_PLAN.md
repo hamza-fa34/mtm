@@ -134,3 +134,10 @@ Retirer progressivement le mode `local` comme mode metier principal.
 - Flux offline: `UI -> queue locale -> replay API`
 - PostgreSQL devient reference metier unique
 - Offline simple operationnel sans architecture offline-first complexe
+
+## Etat d'avancement (2026-03-09)
+- Lot 1: termine (fondations queue offline + replay + tests unitaires)
+- Lot 2: termine (orders ecriture API-first + queue + replay)
+- Lot 3: termine (inventory ecriture API-first + queue + replay)
+- Lot 4: termine (sessions open/close API-first + queue + replay)
+- Lot 5: en cours (lecture auth protegee sur endpoints securises + reduction du local metier)
