@@ -30,6 +30,7 @@
 | BL-018D | P5 | Pre-prod backup/restore automatisables | M | BL-018C | DONE |
 | BL-018E | P5 | Pre-prod CI gate renforce | M | BL-018D | DONE |
 | BL-018F | P5 | Observabilite minimale exploitable (alert policy + drill) | S | BL-018C | DONE |
+| BL-017R | P5 | Revalidation finale metier mode API + offline replay | M | BL-017, BL-018F, Lot5 tech | IN_PROGRESS |
 
 ## Prochaine Action Recommandee
-- Finaliser la cloture documentaire BL-018 et cadrer BL-019 (monitoring GitHub active + prepa prod), puis lancer execution quand staging public est disponible.
+- Executer `docs/BL017_REVALIDATION_API_SYNC.md`, cloturer BL-017R, puis cadrer BL-019 (monitoring GitHub active + prepa prod).
