@@ -8,6 +8,8 @@ import {
   replayPendingOrderWrites,
   saveOrdersState,
   writeOrderApiFirstOrQueue,
+  writeSessionCloseApiFirstOrQueue,
+  writeSessionOpenApiFirstOrQueue,
 } from '../data/ordersDataAdapter';
 import { useSettings } from './SettingsContext';
 
@@ -61,9 +63,10 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [currentUser?.pin]);
 
   const openSession = (initialCash: number) => {
+    const startTime = Date.now();
     const newSession: DailySession = {
       id: crypto.randomUUID(),
-      startTime: Date.now(),
+      startTime,
       initialCash,
       totalSales: 0,
       totalExpenses: 0,
@@ -73,15 +76,23 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       vatSummary: {}
     };
     setCurrentSession(newSession);
+    void writeSessionOpenApiFirstOrQueue(
+      {
+        initialCash,
+        startTime,
+      },
+      currentUser?.pin,
+    );
   };
 
   const closeSession = (finalCash: number) => {
     if (!currentSession) return;
     const safeFinalCash = Number.isFinite(finalCash) ? finalCash : 0;
+    const endTime = Date.now();
 
     const closedSession: DailySession = {
       ...currentSession,
-      endTime: Date.now(),
+      endTime,
       finalCash: safeFinalCash,
       status: 'CLOSED'
     };
@@ -102,6 +113,19 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
     setSessionsHistory(nextSessionsHistory);
     setCurrentSession(null);
+    void writeSessionCloseApiFirstOrQueue(
+      {
+        sessionId: currentSession.id,
+        finalCash: safeFinalCash,
+        endTime,
+        expectedTotals: {
+          totalSales: currentSession.totalSales,
+          ordersCount: currentSession.ordersCount,
+          totalExpenses: currentSession.totalExpenses,
+        },
+      },
+      currentUser?.pin,
+    );
   };
 
   const addOrder = (items: CartItem[], total: number, paymentMethod: PaymentMethod, serviceMode: ServiceMode, customerId?: string) => {

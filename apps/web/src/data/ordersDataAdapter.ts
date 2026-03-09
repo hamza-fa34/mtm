@@ -39,6 +39,22 @@ export interface CreateOrderWritePayload {
   customerId?: string;
 }
 
+export interface OpenSessionWritePayload {
+  initialCash: number;
+  startTime?: number;
+}
+
+export interface CloseSessionWritePayload {
+  sessionId?: string;
+  finalCash: number;
+  endTime?: number;
+  expectedTotals?: {
+    totalSales?: number;
+    ordersCount?: number;
+    totalExpenses?: number;
+  };
+}
+
 function safeNumber(value: unknown, fallback: number): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
@@ -193,22 +209,57 @@ async function fetchOrdersFromApi(): Promise<Order[]> {
   return list.map((item, index) => sanitizeOrder(item, index));
 }
 
+async function fetchSessionsFromApi(): Promise<{
+  currentSession: DailySession | null;
+  sessionsHistory: DailySession[];
+}> {
+  const [currentRes, historyRes] = await Promise.all([
+    fetch(`${getApiBaseUrl()}/sessions/current`),
+    fetch(`${getApiBaseUrl()}/sessions`),
+  ]);
+
+  if (!currentRes.ok) {
+    throw new Error(`Failed to fetch current session from API (${currentRes.status})`);
+  }
+  if (!historyRes.ok) {
+    throw new Error(`Failed to fetch sessions history from API (${historyRes.status})`);
+  }
+
+  const currentRaw = (await currentRes.json()) as Partial<DailySession> | null;
+  const historyRaw = (await historyRes.json()) as Array<Partial<DailySession>>;
+
+  return {
+    currentSession: currentRaw ? sanitizeDailySession(currentRaw, 0) : null,
+    sessionsHistory: (Array.isArray(historyRaw) ? historyRaw : []).map((item, index) =>
+      sanitizeDailySession(item, index),
+    ),
+  };
+}
+
 export async function loadOrdersState(): Promise<OrdersState> {
   const local = getLocalOrdersState();
   if (getDataSourceMode() === 'api') {
     try {
-      const apiOrders = await fetchOrdersFromApi();
-      if (apiOrders.length > 0 || local.orders.length === 0) {
-        const next: OrdersState = {
-          ...local,
-          orders: apiOrders,
-        };
-        writeJsonToStorage(ORDERS_KEY, next.orders);
-        setDomainDataSourceStatus('orders', 'api');
-        return next;
-      }
-      setDomainDataSourceStatus('orders', 'fallback');
-      return local;
+      const [apiOrders, apiSessions] = await Promise.all([
+        fetchOrdersFromApi(),
+        fetchSessionsFromApi(),
+      ]);
+
+      const next: OrdersState = {
+        orders: apiOrders.length > 0 || local.orders.length === 0 ? apiOrders : local.orders,
+        currentSession: apiSessions.currentSession ?? local.currentSession,
+        sessionsHistory:
+          apiSessions.sessionsHistory.length > 0 || local.sessionsHistory.length === 0
+            ? apiSessions.sessionsHistory
+            : local.sessionsHistory,
+      };
+
+      writeJsonToStorage(ORDERS_KEY, next.orders);
+      writeJsonToStorage(CURRENT_SESSION_KEY, next.currentSession);
+      writeJsonToStorage(SESSIONS_HISTORY_KEY, next.sessionsHistory);
+
+      setDomainDataSourceStatus('orders', 'api');
+      return next;
     } catch {
       setDomainDataSourceStatus('orders', 'fallback');
       return local;
@@ -246,6 +297,43 @@ async function executeOrderOfflineOperation(
   }
 }
 
+async function executeSessionOfflineOperation(
+  operation: OfflineOperation<OpenSessionWritePayload | CloseSessionWritePayload>,
+  pin?: string,
+): Promise<void> {
+  if (operation.action === 'open_session') {
+    const response = await authenticatedApiFetch(
+      '/sessions/open',
+      {
+        method: 'POST',
+        body: JSON.stringify(operation.payload),
+      },
+      pin,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to open session via API (${response.status})`);
+    }
+    return;
+  }
+
+  if (operation.action === 'close_session') {
+    const response = await authenticatedApiFetch(
+      '/sessions/close',
+      {
+        method: 'POST',
+        body: JSON.stringify(operation.payload),
+      },
+      pin,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to close session via API (${response.status})`);
+    }
+    return;
+  }
+
+  throw new Error(`Unsupported session action: ${operation.action}`);
+}
+
 export async function writeOrderApiFirstOrQueue(
   payload: CreateOrderWritePayload,
   pin?: string,
@@ -272,17 +360,75 @@ export async function writeOrderApiFirstOrQueue(
   }
 }
 
+export async function writeSessionOpenApiFirstOrQueue(
+  payload: OpenSessionWritePayload,
+  pin?: string,
+): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
+  if (getDataSourceMode() !== 'api') {
+    setDomainDataSourceStatus('orders', 'local');
+    return { queued: false, synced: false, operationId: 'local-mode' };
+  }
+
+  const operation = createOfflineOperation({
+    domain: 'sessions',
+    action: 'open_session',
+    payload,
+  });
+
+  try {
+    await executeSessionOfflineOperation(operation, pin);
+    setDomainDataSourceStatus('orders', 'api');
+    return { queued: false, synced: true, operationId: operation.operationId };
+  } catch {
+    await enqueueOfflineOperation(offlineQueueStore, operation);
+    setDomainDataSourceStatus('orders', 'fallback');
+    return { queued: true, synced: false, operationId: operation.operationId };
+  }
+}
+
+export async function writeSessionCloseApiFirstOrQueue(
+  payload: CloseSessionWritePayload,
+  pin?: string,
+): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
+  if (getDataSourceMode() !== 'api') {
+    setDomainDataSourceStatus('orders', 'local');
+    return { queued: false, synced: false, operationId: 'local-mode' };
+  }
+
+  const operation = createOfflineOperation({
+    domain: 'sessions',
+    action: 'close_session',
+    payload,
+  });
+
+  try {
+    await executeSessionOfflineOperation(operation, pin);
+    setDomainDataSourceStatus('orders', 'api');
+    return { queued: false, synced: true, operationId: operation.operationId };
+  } catch {
+    await enqueueOfflineOperation(offlineQueueStore, operation);
+    setDomainDataSourceStatus('orders', 'fallback');
+    return { queued: true, synced: false, operationId: operation.operationId };
+  }
+}
+
 export async function replayPendingOrderWrites(pin?: string): Promise<void> {
   if (getDataSourceMode() !== 'api') return;
 
   await replayOfflineQueue(offlineQueueStore, async (operation) => {
-    if (operation.domain !== 'orders' || operation.action !== 'create_order') {
+    if (operation.domain === 'orders' && operation.action === 'create_order') {
+      await executeOrderOfflineOperation(
+        operation as OfflineOperation<CreateOrderWritePayload>,
+        pin,
+      );
       return;
     }
 
-    await executeOrderOfflineOperation(
-      operation as OfflineOperation<CreateOrderWritePayload>,
-      pin,
-    );
+    if (operation.domain === 'sessions') {
+      await executeSessionOfflineOperation(
+        operation as OfflineOperation<OpenSessionWritePayload | CloseSessionWritePayload>,
+        pin,
+      );
+    }
   });
 }
