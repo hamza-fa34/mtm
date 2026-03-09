@@ -10,7 +10,7 @@ Regle: aucun lot suivant sans validation GO du lot courant.
 - [x] Lot 2 implemente et valide techniquement
 - [x] Lot 3 implemente et valide techniquement
 - [x] Lot 4 implemente et valide techniquement
-- [~] Lot 5 demarre (lectures securisees + nettoyage progressif local metier)
+- [~] Lot 5 en cours (lectures securisees + mode nominal `api` + nettoyage progressif local metier)
 - [ ] Validation metier finale GO/NO-GO a rejouer completement
 
 ## Checklist globale GO/NO-GO
