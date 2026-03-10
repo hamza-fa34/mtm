@@ -15,10 +15,10 @@
 | 2. Orders / POS / KDS | PASS (auto) | Playwright `order created from POS appears in KDS` |
 | 3. Inventory | PASS (API e2e) | `critical-flows.e2e` couvre ecriture stock transactionnelle |
 | 4. Session Close / EndOfDay | PASS (auto) | Playwright `manager can close session` + backend e2e |
-| 5. Degradation API indisponible | PARTIAL | Test auto present et execute en mode API; ignore en mode local deterministe |
-| 6. Reconnexion + Replay | TODO (manuel) | Validation operateur finale requise pour cloture GO |
+| 5. Degradation API indisponible | PASS | Valide explicitement en mode `VITE_DATA_SOURCE=api` (etat UI `fallback`, flux maintenu) |
+| 6. Reconnexion + Replay | PASS (manuel) | Validation operateur effectuee, replay confirme sans incoherence metier |
 | 7. Concurrence stock limite | PASS (auto) | Backend e2e + simulation live (`201+409`, stock non negatif) |
-| 8. Gate final | IN_PROGRESS | Attente bloc 6 + signature GO/NO-GO |
+| 8. Gate final | DONE | GO signe |
 
 ## Incidents observes
 - Incident 1: test de concurrence live a revele initialement une survente (`201+201`, stock negatif).
@@ -29,6 +29,12 @@
 - Action 2: ajout test e2e backend `prevents concurrent oversell on limited stock`.
 
 ## Decision finale
-- GO / NO-GO:
+- GO / NO-GO: GO
 - Justification:
+  - flux critiques stables en mode nominal API-first (`orders`, `inventory`, `sessions`)
+  - queue offline + replay/backoff en place et valides techniquement
+  - test de degradation API explicitement valide en mode `api`
+  - protection concurrence stock validee (`201+409`, stock coherent)
+  - quality gates verts (`quality:ci`, e2e web, e2e backend)
 - Conditions de passage phase suivante:
+  - demarrer BL-019 avec URL staging disponible pour activation monitoring GitHub

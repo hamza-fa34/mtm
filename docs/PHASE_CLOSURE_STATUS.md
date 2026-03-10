@@ -18,8 +18,7 @@ Final status snapshot after offline-sync stabilization and cleanup pass.
 - Quality gate passing locally: `npm run quality:ci`
 
 ## Remaining minor items
-- BL-017R manual operator validation for reconnect + replay final sign-off
-- Final GO/NO-GO signature entry in `docs/BL017R_EXECUTION_LOG.md`
+- Aucun blocage technique/documentaire ouvert sur la phase actuelle
 
 ## Not remaining in this phase
 - No new architecture change planned
@@ -27,8 +26,7 @@ Final status snapshot after offline-sync stabilization and cleanup pass.
 - No data model change planned
 
 ## Readiness for next phase
-Status: READY WITH FINAL SIGN-OFF PENDING
+Status: READY
 
 Next logical step:
-1. Sign BL-017R final gate (GO/NO-GO)
-2. Start BL-019 (monitoring activation + pre-prod preparation)
+1. Start BL-019 (monitoring activation + pre-prod preparation)

@@ -30,9 +30,8 @@
 | BL-018D | P5 | Pre-prod backup/restore automatisables | M | BL-018C | DONE |
 | BL-018E | P5 | Pre-prod CI gate renforce | M | BL-018D | DONE |
 | BL-018F | P5 | Observabilite minimale exploitable (alert policy + drill) | S | BL-018C | DONE |
-| BL-017R | P5 | Revalidation finale metier mode API + offline replay | M | BL-017, BL-018F, Lot5 tech | IN_PROGRESS |
+| BL-017R | P5 | Revalidation finale metier mode API + offline replay | M | BL-017, BL-018F, Lot5 tech | DONE |
 | BL-018G | P5 | Final cleanup and consistency pass (docs/repo/e2e determinism) | S | BL-018F | DONE |
 
 ## Prochaine Action Recommandee
-- Signer la gate BL-017R (GO/NO-GO) apres validation manuelle reconnexion + replay.
-- Ensuite demarrer BL-019 (monitoring GitHub active + prepa pre-prod).
+- Demarrer BL-019 (monitoring GitHub active + prepa pre-prod).
