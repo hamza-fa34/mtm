@@ -75,16 +75,16 @@ URLs:
   - `event=http_error`
 - `x-request-id` is returned and reused for request/error correlation.
 - Minimum runbooks:
-  - `docs/RUNBOOK_INCIDENT_RESPONSE.md`
-  - `docs/OBSERVABILITY_MINIMUM.md`
-  - `docs/OBSERVABILITY_ALERT_MATRIX.md`
+  - `docs/operations/RUNBOOK_INCIDENT_RESPONSE.md`
+  - `docs/operations/OBSERVABILITY_MINIMUM.md`
+  - `docs/operations/OBSERVABILITY_ALERT_MATRIX.md`
 
 Automated monitor:
 - Workflow: `.github/workflows/ops-monitor.yml`
 - Configure repo variable: `OPS_BASE_URL` (target API base URL, including `/api`)
  
 Roadmap (next phase):
-- `docs/PHASE_NEXT_BL019.md`
+- `docs/phases/PHASE_NEXT_BL019.md`
 
 ## CI
 - Workflow: `.github/workflows/ci.yml`

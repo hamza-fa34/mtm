@@ -38,7 +38,7 @@
 ### Critere GO
 - [x] Aucune commande incoherente observee sur 10 scenarios critiques
 - [x] Aucune incoherence stock observee sous concurrence
-- [x] Evidence renseignee dans `docs/BL017_L1_10_SCENARIOS_EVIDENCE.md`
+- [x] Evidence renseignee dans `docs/validation/BL017_L1_10_SCENARIOS_EVIDENCE.md`
 
 ## L2 - Inventory write transactionnel
 ### Checklist
@@ -116,5 +116,5 @@
 ## Gate final "Ready for next phase"
 - [x] L1 a L7 en `DONE`
 - [x] Aucun `NO-GO` ouvert
-- [x] Checklist test metier signee (`docs/TEST_PLAN.md` + `docs/BL017_L1_10_SCENARIOS_EVIDENCE.md`)
+- [x] Checklist test metier signee (`docs/validation/TEST_PLAN.md` + `docs/validation/BL017_L1_10_SCENARIOS_EVIDENCE.md`)
 - [x] Decision de passage validee (GO prod-ready phase suivante)

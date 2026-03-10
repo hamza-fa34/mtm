@@ -68,6 +68,6 @@ Justification:
 - BL-018F (extension observabilite minimale): DONE
 
 References:
-- `docs/OBSERVABILITY_MINIMUM.md`
-- `docs/OBSERVABILITY_ALERT_MATRIX.md`
-- `docs/BL018F_OBSERVABILITY_DRILL_EVIDENCE.md`
+- `docs/operations/OBSERVABILITY_MINIMUM.md`
+- `docs/operations/OBSERVABILITY_ALERT_MATRIX.md`
+- `docs/operations/BL018F_OBSERVABILITY_DRILL_EVIDENCE.md`

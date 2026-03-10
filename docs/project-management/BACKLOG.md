@@ -12,7 +12,7 @@
 | BL-003 | P0 | Backup automatique a la cloture session | M | BL-001 | DONE |
 | BL-004 | P0 | Ecran Data Management (Export/Import/Reset) | M | BL-001, BL-002, BL-003 | DONE |
 | BL-005 | P0 | Reset protege (manager + double confirmation) | S | BL-004 | DONE |
-| BL-006 | P1 | Materialiser 10 scenarios critiques (execution + suivi) | S | docs/TEST_PLAN.md | DONE |
+| BL-006 | P1 | Materialiser 10 scenarios critiques (execution + suivi) | S | docs/validation/TEST_PLAN.md | DONE |
 | BL-007 | P1 | Hardening erreurs flux POS/KDS/stock | M | BL-006 | DONE |
 | BL-008 | P2 | Conventions contribution et checklist PR | S | - | DONE |
 | BL-009 | P2 | Tests unitaires utils critiques (TVA, couts, stock) | M | BL-008 | DONE |

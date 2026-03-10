@@ -98,4 +98,4 @@ When pre-prod traffic increases, add an optional `observability` Docker profile 
 - Dashboarding
 
 Latest drill evidence:
-- `docs/BL018F_OBSERVABILITY_DRILL_EVIDENCE.md`
+- `docs/operations/BL018F_OBSERVABILITY_DRILL_EVIDENCE.md`

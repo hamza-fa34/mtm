@@ -5,8 +5,8 @@ Finaliser la validation metier + technique BL-017 avant toute nouvelle evolution
 
 ## Statut
 - Campagne executee et validee le 2026-03-06.
-- Reference de cloture: `docs/BL017_EXECUTION_CHECKLIST.md` (L1 -> L7 en `DONE/GO`).
-- Evidence metier: `docs/BL017_L1_10_SCENARIOS_EVIDENCE.md` et `docs/TEST_PLAN.md`.
+- Reference de cloture: `docs/validation/BL017_EXECUTION_CHECKLIST.md` (L1 -> L7 en `DONE/GO`).
+- Evidence metier: `docs/validation/BL017_L1_10_SCENARIOS_EVIDENCE.md` et `docs/validation/TEST_PLAN.md`.
 
 ## Pre-conditions (historique d'execution)
 - CI GitHub au vert sur `main`.

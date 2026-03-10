@@ -120,4 +120,4 @@ Definition of Done:
 Objectif: preparer l'activation du monitoring GitHub et le passage vers une pre-production proche prod.
 
 Livrable de cadrage:
-- `docs/PHASE_NEXT_BL019.md`
+- `docs/phases/PHASE_NEXT_BL019.md`
