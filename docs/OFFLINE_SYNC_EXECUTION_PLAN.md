@@ -135,10 +135,10 @@ Retirer progressivement le mode `local` comme mode metier principal.
 - PostgreSQL devient reference metier unique
 - Offline simple operationnel sans architecture offline-first complexe
 
-## Etat d'avancement (2026-03-09)
+## Etat d'avancement (2026-03-10)
 - Lot 1: termine (fondations queue offline + replay + tests unitaires)
 - Lot 2: termine (orders ecriture API-first + queue + replay)
 - Lot 3: termine (inventory ecriture API-first + queue + replay)
 - Lot 4: termine (sessions open/close API-first + queue + replay)
-- Lot 5: en finalisation (mode nominal `api`, lectures/ecritures critiques alignees API-first, chemins non critiques local clarifies comme fallback/cache)
-- Validation finale restante: campagne metier GO/NO-GO complete en mode `api` + scenarios degrade/reconnexion
+- Lot 5: implemente techniquement (mode nominal `api`, lectures/ecritures critiques alignees API-first, chemins non critiques conserves en fallback/cache)
+- Validation finale restante: signature metier GO/NO-GO (reconnexion + replay operateur)

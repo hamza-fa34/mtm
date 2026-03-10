@@ -5,13 +5,13 @@ Checklist de pilotage pour executer le chantier offline sync par lots, sans cass
 
 Regle: aucun lot suivant sans validation GO du lot courant.
 
-## Etat actuel (2026-03-09)
+## Etat actuel (2026-03-10)
 - [x] Lot 1 implemente et valide techniquement
 - [x] Lot 2 implemente et valide techniquement
 - [x] Lot 3 implemente et valide techniquement
 - [x] Lot 4 implemente et valide techniquement
 - [x] Lot 5 implemente techniquement (mode nominal `api`, local conserve en legacy/rollback)
-- [ ] Validation metier finale GO/NO-GO a rejouer completement (mode `api` + offline degrade/reconnexion)
+- [ ] Validation metier finale GO/NO-GO a signer (focus: reconnexion + replay operateur)
 - [x] Replay offline avec fenetre de retry/backoff effective (tentatives differees via `nextAttemptAt`)
 - [x] Compose fullstack aligne sur mode nominal `api` par defaut
 
