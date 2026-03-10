@@ -51,6 +51,7 @@ This phase is intentionally deferred until a staging URL is available.
 
 ## Entry Criteria
 - BL-018 docs closed and aligned.
+- BL-017R final gate signed (GO/NO-GO).
 - Staging API URL reachable from GitHub Actions.
 - Named owners for ops incident response.
 
