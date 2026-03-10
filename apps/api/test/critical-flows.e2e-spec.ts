@@ -173,5 +173,64 @@ describe('Critical flows (e2e)', () => {
       .send({ sessionId: open.body.id, finalCash: 110 })
       .expect(201);
   });
+
+  it('prevents concurrent oversell on limited stock', async () => {
+    await prisma.ingredient.update({
+      where: { id: ingredientId },
+      data: { currentStock: 20 },
+    });
+
+    const managerLogin = await request(app.getHttpServer())
+      .post('/api/auth/login')
+      .send({ pin: managerPin })
+      .expect(201);
+    const token = managerLogin.body.accessToken;
+
+    const open = await request(app.getHttpServer())
+      .post('/api/sessions/open')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ initialCash: 100 })
+      .expect(201);
+
+    const payload = {
+      sessionId: open.body.id,
+      paymentMethod: 'CASH',
+      serviceMode: 'TAKEAWAY',
+      total: 60,
+      items: [
+        {
+          productId,
+          quantity: 6,
+          unitPrice: 10,
+          totalPrice: 60,
+        },
+      ],
+    };
+
+    const [first, second] = await Promise.all([
+      request(app.getHttpServer())
+        .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload),
+      request(app.getHttpServer())
+        .post('/api/orders')
+        .set('Authorization', `Bearer ${token}`)
+        .send(payload),
+    ]);
+
+    const statuses = [first.status, second.status].sort((a, b) => a - b);
+    expect(statuses).toEqual([201, 409]);
+
+    const ingredientAfter = await prisma.ingredient.findUnique({
+      where: { id: ingredientId },
+    });
+    expect(Number(ingredientAfter?.currentStock)).toBe(8);
+
+    await request(app.getHttpServer())
+      .post('/api/sessions/close')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ sessionId: open.body.id, finalCash: 160 })
+      .expect(201);
+  });
 });
 

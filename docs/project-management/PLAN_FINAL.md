@@ -3,11 +3,13 @@
 ## Objectif Global
 Transformer le MVP actuel en produit robuste, sans casser les flux terrain critiques (POS, KDS, EndOfDay), avec une migration progressive vers une architecture complete.
 
-## Etat global au 2026-03-06
+## Etat global au 2026-03-10
 - Phases 0 -> 4: executees et validees.
 - BL-017: cloture (`DONE/GO`).
 - BL-018 (A->F): execute et valide (pre-prod hardening + observabilite minimale).
-- Prochaine etape: cloture documentaire finale puis cadrage phase suivante (BL-019).
+- BL-018G (cleanup final docs/repo): DONE.
+- BL-017R: en attente de signature finale GO/NO-GO (validation manuelle reconnexion + replay).
+- Prochaine etape: signature BL-017R puis lancement BL-019.
 
 ## Phase 0 - Decisions Metier (Semaine 1)
 Objectif: verrouiller les regles business avant tout developpement.
@@ -118,4 +120,4 @@ Definition of Done:
 Objectif: preparer l'activation du monitoring GitHub et le passage vers une pre-production proche prod.
 
 Livrable de cadrage:
-- `docs/PHASE_NEXT_BL019.md`
+- `docs/phases/PHASE_NEXT_BL019.md`

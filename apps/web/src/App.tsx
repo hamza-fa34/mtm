@@ -15,13 +15,13 @@ import { Lock } from 'lucide-react';
 // Contexts
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import { CategoryProvider } from './contexts/CategoryContext';
-import { InventoryProvider, useInventory } from './contexts/InventoryContext';
+import { InventoryProvider } from './contexts/InventoryContext';
 import { OrderProvider, useOrders } from './contexts/OrderContext';
-import { ProductProvider, useProducts } from './contexts/ProductContext';
-import { CustomerProvider, useCustomers } from './contexts/CustomerContext';
+import { ProductProvider } from './contexts/ProductContext';
+import { CustomerProvider } from './contexts/CustomerContext';
 
 const AppContent: React.FC = () => {
-  const { currentView, setCurrentView, isLocked, pin, handlePinInput, setIsLocked, hasPermission } = useSettings();
+  const { currentView, setCurrentView, isLocked, pin, handlePinInput, hasPermission } = useSettings();
   const { currentSession, orders } = useOrders();
   
   // Expenses are still simple enough to keep here or we could make an ExpenseContext

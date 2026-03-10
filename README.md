@@ -38,12 +38,14 @@ mtm/
 Configuration:
 1. Copier `apps/web/.env.example` vers `apps/web/.env.local`
 2. Variables principales:
-   - `VITE_DATA_SOURCE=local|api`
+   - `VITE_DATA_SOURCE=api|local` (recommande: `api`, `local` = mode legacy/rollback)
    - `VITE_API_BASE_URL=http://localhost:4000/api`
 
 Lancement local:
 - `npm --prefix apps/web install`
 - `npm --prefix apps/web run dev`
+- E2E web (deterministe): `npm --prefix apps/web run e2e` (mode `local` par defaut)
+- E2E web en mode API: `VITE_DATA_SOURCE=api npm --prefix apps/web run e2e`
 
 ## Backend (apps/api)
 Lancement local:
@@ -55,6 +57,8 @@ Lancement local:
 ## Docker (infra)
 Stack complete:
 - `docker compose -f infra/docker-compose.yml --profile fullstack up --build -d`
+- Par defaut, le frontend tourne en `VITE_DATA_SOURCE=api` (mode nominal PostgreSQL).
+- Override possible (legacy/diagnostic): `VITE_DATA_SOURCE=local docker compose -f infra/docker-compose.yml --profile fullstack up --build -d`
 
 Arret:
 - `docker compose -f infra/docker-compose.yml down`
@@ -71,16 +75,16 @@ URLs:
   - `event=http_error`
 - `x-request-id` is returned and reused for request/error correlation.
 - Minimum runbooks:
-  - `docs/RUNBOOK_INCIDENT_RESPONSE.md`
-  - `docs/OBSERVABILITY_MINIMUM.md`
-  - `docs/OBSERVABILITY_ALERT_MATRIX.md`
+  - `docs/operations/RUNBOOK_INCIDENT_RESPONSE.md`
+  - `docs/operations/OBSERVABILITY_MINIMUM.md`
+  - `docs/operations/OBSERVABILITY_ALERT_MATRIX.md`
 
 Automated monitor:
 - Workflow: `.github/workflows/ops-monitor.yml`
 - Configure repo variable: `OPS_BASE_URL` (target API base URL, including `/api`)
  
 Roadmap (next phase):
-- `docs/PHASE_NEXT_BL019.md`
+- `docs/phases/PHASE_NEXT_BL019.md`
 
 ## CI
 - Workflow: `.github/workflows/ci.yml`

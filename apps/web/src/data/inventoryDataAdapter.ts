@@ -1,17 +1,41 @@
-import { INGREDIENTS } from '../constants';
+﻿import { INGREDIENTS } from '../constants';
 import { Ingredient, Purchase, Waste } from '../types';
-import { getApiBaseUrl, getDataSourceMode } from './config';
+import { getDataSourceMode } from './config';
 import { readJsonFromStorage, writeJsonToStorage } from './localStorage';
 import { setDomainDataSourceStatus } from './sourceStatus';
+import { authenticatedApiFetch } from './apiAuth';
+import {
+  createOfflineOperation,
+  enqueueOfflineOperation,
+  LocalStorageOfflineQueueStore,
+  OfflineOperation,
+  replayOfflineQueue,
+} from './offlineQueue';
 
 const INGREDIENTS_KEY = 'molls_ingredients';
 const PURCHASES_KEY = 'molls_purchases';
 const WASTES_KEY = 'molls_wastes';
+const offlineQueueStore = new LocalStorageOfflineQueueStore();
 
 export interface InventoryState {
   ingredients: Ingredient[];
   purchases: Purchase[];
   wastes: Waste[];
+}
+
+export interface PurchaseWritePayload {
+  ingredientId: string;
+  supplierName?: string;
+  quantity: number;
+  totalPrice: number;
+  date?: number;
+}
+
+export interface WasteWritePayload {
+  ingredientId: string;
+  quantity: number;
+  reason: string;
+  date?: number;
 }
 
 function normalizeIngredientUnit(unit: string): Ingredient['unit'] {
@@ -53,6 +77,23 @@ function sanitizePurchase(input: Partial<Purchase>, index: number): Purchase {
   };
 }
 
+function sanitizeWaste(input: Partial<Waste>, index: number): Waste {
+  const date =
+    typeof input.date === 'number' && Number.isFinite(input.date)
+      ? input.date
+      : Date.now();
+  return {
+    id: input.id ?? `waste-${index + 1}`,
+    ingredientId: input.ingredientId ?? '',
+    quantity:
+      typeof input.quantity === 'number' && Number.isFinite(input.quantity)
+        ? input.quantity
+        : 0,
+    reason: normalizeWasteReason(input.reason ?? 'Autre'),
+    date,
+  };
+}
+
 export function getLocalInventoryState(): InventoryState {
   const localIngredients = readJsonFromStorage<Ingredient[]>(INGREDIENTS_KEY);
   const localPurchases = readJsonFromStorage<Purchase[]>(PURCHASES_KEY);
@@ -67,15 +108,18 @@ export function getLocalInventoryState(): InventoryState {
       localPurchases && Array.isArray(localPurchases)
         ? localPurchases.map((item, index) => sanitizePurchase(item, index))
         : [],
-    wastes: localWastes && Array.isArray(localWastes) ? localWastes : [],
+    wastes:
+      localWastes && Array.isArray(localWastes)
+        ? localWastes.map((item, index) => sanitizeWaste(item, index))
+        : [],
   };
 }
 
-async function fetchInventoryFromApi(): Promise<InventoryState> {
+async function fetchInventoryFromApi(pin?: string): Promise<InventoryState> {
   const [ingredientsRes, purchasesRes, wastesRes] = await Promise.all([
-    fetch(`${getApiBaseUrl()}/inventory/ingredients`),
-    fetch(`${getApiBaseUrl()}/inventory/purchases`),
-    fetch(`${getApiBaseUrl()}/inventory/wastes`),
+    authenticatedApiFetch('/inventory/ingredients', {}, pin),
+    authenticatedApiFetch('/inventory/purchases', {}, pin),
+    authenticatedApiFetch('/inventory/wastes', {}, pin),
   ]);
 
   if (!ingredientsRes.ok) {
@@ -126,21 +170,26 @@ async function fetchInventoryFromApi(): Promise<InventoryState> {
     purchases: (Array.isArray(purchasesRaw) ? purchasesRaw : []).map((p, index) =>
       sanitizePurchase(p, index),
     ),
-    wastes: (Array.isArray(wastesRaw) ? wastesRaw : []).map((w) => ({
-      id: w.id,
-      ingredientId: w.ingredientId,
-      quantity: w.quantity,
-      reason: normalizeWasteReason(w.reason),
-      date: w.date,
-    })),
+    wastes: (Array.isArray(wastesRaw) ? wastesRaw : []).map((w, index) =>
+      sanitizeWaste(
+        {
+          id: w.id,
+          ingredientId: w.ingredientId,
+          quantity: w.quantity,
+          reason: normalizeWasteReason(w.reason),
+          date: w.date,
+        },
+        index,
+      ),
+    ),
   };
 }
 
-export async function loadInventoryState(): Promise<InventoryState> {
+export async function loadInventoryState(pin?: string): Promise<InventoryState> {
   const local = getLocalInventoryState();
   if (getDataSourceMode() === 'api') {
     try {
-      const apiState = await fetchInventoryFromApi();
+      const apiState = await fetchInventoryFromApi(pin);
       const hasApiData =
         apiState.ingredients.length > 0 ||
         apiState.purchases.length > 0 ||
@@ -174,4 +223,114 @@ export async function saveInventoryState(state: InventoryState): Promise<void> {
   writeJsonToStorage(INGREDIENTS_KEY, state.ingredients);
   writeJsonToStorage(PURCHASES_KEY, state.purchases);
   writeJsonToStorage(WASTES_KEY, state.wastes);
+}
+
+async function executeInventoryOfflineOperation(
+  operation: OfflineOperation<PurchaseWritePayload | WasteWritePayload>,
+  pin?: string,
+): Promise<void> {
+  if (operation.action === 'create_purchase') {
+    const response = await authenticatedApiFetch(
+      '/inventory/purchases',
+      {
+        method: 'POST',
+        body: JSON.stringify(operation.payload),
+      },
+      pin,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to create purchase via API (${response.status})`);
+    }
+    return;
+  }
+
+  if (operation.action === 'create_waste') {
+    const response = await authenticatedApiFetch(
+      '/inventory/wastes',
+      {
+        method: 'POST',
+        body: JSON.stringify(operation.payload),
+      },
+      pin,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to create waste via API (${response.status})`);
+    }
+    return;
+  }
+
+  throw new Error(`Unsupported inventory action: ${operation.action}`);
+}
+
+export async function writePurchaseApiFirstOrQueue(
+  payload: PurchaseWritePayload,
+  pin?: string,
+): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
+  if (getDataSourceMode() !== 'api') {
+    setDomainDataSourceStatus('inventory', 'local');
+    return { queued: false, synced: false, operationId: 'local-mode' };
+  }
+
+  const operation = createOfflineOperation({
+    domain: 'inventory',
+    action: 'create_purchase',
+    payload,
+  });
+
+  try {
+    await executeInventoryOfflineOperation(operation, pin);
+    setDomainDataSourceStatus('inventory', 'api');
+    return { queued: false, synced: true, operationId: operation.operationId };
+  } catch {
+    await enqueueOfflineOperation(offlineQueueStore, operation);
+    setDomainDataSourceStatus('inventory', 'fallback');
+    return { queued: true, synced: false, operationId: operation.operationId };
+  }
+}
+
+export async function writeWasteApiFirstOrQueue(
+  payload: WasteWritePayload,
+  pin?: string,
+): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
+  if (getDataSourceMode() !== 'api') {
+    setDomainDataSourceStatus('inventory', 'local');
+    return { queued: false, synced: false, operationId: 'local-mode' };
+  }
+
+  const operation = createOfflineOperation({
+    domain: 'inventory',
+    action: 'create_waste',
+    payload,
+  });
+
+  try {
+    await executeInventoryOfflineOperation(operation, pin);
+    setDomainDataSourceStatus('inventory', 'api');
+    return { queued: false, synced: true, operationId: operation.operationId };
+  } catch {
+    await enqueueOfflineOperation(offlineQueueStore, operation);
+    setDomainDataSourceStatus('inventory', 'fallback');
+    return { queued: true, synced: false, operationId: operation.operationId };
+  }
+}
+
+export async function replayPendingInventoryWrites(pin?: string): Promise<void> {
+  if (getDataSourceMode() !== 'api') return;
+
+  const report = await replayOfflineQueue(offlineQueueStore, async (operation) => {
+    if (operation.domain !== 'inventory') return;
+    await executeInventoryOfflineOperation(
+      operation as OfflineOperation<PurchaseWritePayload | WasteWritePayload>,
+      pin,
+    );
+  });
+
+  if (report.attempted === 0) return;
+
+  if (report.failed > 0) {
+    setDomainDataSourceStatus('inventory', 'fallback');
+    return;
+  }
+
+  setDomainDataSourceStatus('inventory', 'api');
 }

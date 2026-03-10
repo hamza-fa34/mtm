@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { ChefHat, Clock, CheckCircle, AlertCircle, Utensils, Ticket } from 'lucide-react';
+import { Clock, CheckCircle, Utensils } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import logo from '../assets/logo.png';
 
 // Contexts
 import { useOrders } from '../contexts/OrderContext';
@@ -30,7 +31,7 @@ const KDS: React.FC = () => {
         <div className="flex gap-6 h-full min-w-max">
           {activeOrders.length === 0 ? (
             <div className="w-full flex flex-col items-center justify-center text-gray-300 gap-4 opacity-50">
-              <ChefHat size={64} strokeWidth={1} />
+              <img src={logo} alt="Molly's Truck logo" className="w-16 h-16 rounded-2xl object-cover opacity-70" />
               <p className="font-black text-xs uppercase tracking-widest">Aucune commande en attente</p>
             </div>
           ) : activeOrders.map(order => (

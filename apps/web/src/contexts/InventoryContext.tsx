@@ -5,8 +5,12 @@ import { getProductStockStatus as getStatusUtil } from '../utils';
 import {
   getLocalInventoryState,
   loadInventoryState,
+  replayPendingInventoryWrites,
   saveInventoryState,
+  writePurchaseApiFirstOrQueue,
+  writeWasteApiFirstOrQueue,
 } from '../data/inventoryDataAdapter';
+import { useSettings } from './SettingsContext';
 
 interface InventoryContextType {
   ingredients: Ingredient[];
@@ -22,6 +26,7 @@ interface InventoryContextType {
 const InventoryContext = createContext<InventoryContextType | undefined>(undefined);
 
 export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { currentUser } = useSettings();
   const localState = getLocalInventoryState();
   const [ingredients, setIngredients] = useState<Ingredient[]>(localState.ingredients);
   const [purchases, setPurchases] = useState<Purchase[]>(localState.purchases);
@@ -33,7 +38,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   useEffect(() => {
     let mounted = true;
-    void loadInventoryState().then((state) => {
+    void loadInventoryState(currentUser?.pin).then((state) => {
       if (!mounted) return;
       setIngredients(state.ingredients);
       setPurchases(state.purchases);
@@ -42,7 +47,20 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [currentUser?.pin]);
+
+  useEffect(() => {
+    const onOnline = () => {
+      void replayPendingInventoryWrites(currentUser?.pin);
+    };
+
+    window.addEventListener('online', onOnline);
+    void replayPendingInventoryWrites(currentUser?.pin);
+
+    return () => {
+      window.removeEventListener('online', onOnline);
+    };
+  }, [currentUser?.pin]);
 
   const addIngredient = (ing: Omit<Ingredient, 'id'>) => {
     setIngredients(prev => [...prev, { ...ing, id: crypto.randomUUID() }]);
@@ -59,6 +77,17 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       },
       ...prev,
     ]);
+
+    void writePurchaseApiFirstOrQueue(
+      {
+        ingredientId: p.ingredientId,
+        supplierName: p.supplierName,
+        quantity: p.quantity,
+        totalPrice: p.totalPrice,
+        date: p.date,
+      },
+      currentUser?.pin,
+    );
 
     setIngredients(prev => prev.map(ing => {
       if (ing.id === p.ingredientId) {
@@ -80,6 +109,17 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const newWaste = { ...w, id: crypto.randomUUID() };
     setWastes(prev => [...prev, newWaste]);
+
+    void writeWasteApiFirstOrQueue(
+      {
+        ingredientId: w.ingredientId,
+        quantity: w.quantity,
+        reason: w.reason,
+        date: w.date,
+      },
+      currentUser?.pin,
+    );
+
     setIngredients(prev => prev.map(ing => {
       if (ing.id === w.ingredientId) {
         return { ...ing, currentStock: Number(Math.max(0, ing.currentStock - w.quantity).toFixed(2)) };

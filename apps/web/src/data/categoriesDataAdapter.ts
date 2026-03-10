@@ -58,4 +58,8 @@ export async function loadCategories(): Promise<Category[]> {
 
 export async function saveCategories(categories: Category[]): Promise<void> {
   writeJsonToStorage(CATEGORIES_STORAGE_KEY, categories);
+  setDomainDataSourceStatus(
+    'categories',
+    getDataSourceMode() === 'api' ? 'fallback' : 'local',
+  );
 }

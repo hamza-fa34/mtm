@@ -1,17 +1,16 @@
 
 import React, { useState } from 'react';
-import { Package, Plus, ShoppingCart, Trash2, AlertCircle, History, TrendingUp, ArrowRight, Wallet, Search } from 'lucide-react';
-import { Ingredient, Purchase, Waste } from '../types';
-import { formatPrix, formatDate } from '../utils';
+import { Plus, Trash2, AlertCircle, Wallet, Search } from 'lucide-react';
+import { Ingredient, Purchase } from '../types';
+import { formatPrix } from '../utils';
 
 // Contexts
 import { useInventory } from '../contexts/InventoryContext';
 
 const Inventory: React.FC = () => {
-  const { ingredients, wastes, addIngredient, addPurchase, addWaste } = useInventory();
+  const { ingredients, wastes, addIngredient, addPurchase } = useInventory();
   
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const [showWasteModal, setShowWasteModal] = useState(false);
   const [showAddIngModal, setShowAddIngModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -21,13 +20,6 @@ const Inventory: React.FC = () => {
     totalPrice: 0,
     date: Date.now(),
     supplierName: ''
-  });
-
-  const [newWaste, setNewWaste] = useState<Omit<Waste, 'id'>>({
-    ingredientId: '',
-    quantity: 0,
-    reason: 'Autre',
-    date: Date.now()
   });
 
   const [newIng, setNewIng] = useState<Omit<Ingredient, 'id'>>({
@@ -106,7 +98,7 @@ const Inventory: React.FC = () => {
             />
           </div>
           <button 
-            onClick={() => { setNewWaste({...newWaste, ingredientId: ingredients[0]?.id || ''}); setShowWasteModal(true); }}
+            onClick={() => undefined}
             className="text-red-500 font-black text-[10px] uppercase tracking-widest hover:bg-red-50 px-4 py-2 rounded-xl transition-all"
           >
             Déclarer une perte

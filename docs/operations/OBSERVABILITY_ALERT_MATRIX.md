@@ -5,7 +5,7 @@ Define a minimal, actionable alert policy for pre-prod operations.
 
 ## Alert Channels
 - Primary: GitHub Actions notifications (failed `Ops Monitor` workflow)
-- Secondary: incident handling via `docs/RUNBOOK_INCIDENT_RESPONSE.md`
+- Secondary: incident handling via `docs/operations/RUNBOOK_INCIDENT_RESPONSE.md`
 
 ## Owners
 - Primary owner: Project maintainer

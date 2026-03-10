@@ -12,7 +12,7 @@
 | BL-003 | P0 | Backup automatique a la cloture session | M | BL-001 | DONE |
 | BL-004 | P0 | Ecran Data Management (Export/Import/Reset) | M | BL-001, BL-002, BL-003 | DONE |
 | BL-005 | P0 | Reset protege (manager + double confirmation) | S | BL-004 | DONE |
-| BL-006 | P1 | Materialiser 10 scenarios critiques (execution + suivi) | S | docs/TEST_PLAN.md | DONE |
+| BL-006 | P1 | Materialiser 10 scenarios critiques (execution + suivi) | S | docs/validation/TEST_PLAN.md | DONE |
 | BL-007 | P1 | Hardening erreurs flux POS/KDS/stock | M | BL-006 | DONE |
 | BL-008 | P2 | Conventions contribution et checklist PR | S | - | DONE |
 | BL-009 | P2 | Tests unitaires utils critiques (TVA, couts, stock) | M | BL-008 | DONE |
@@ -30,6 +30,8 @@
 | BL-018D | P5 | Pre-prod backup/restore automatisables | M | BL-018C | DONE |
 | BL-018E | P5 | Pre-prod CI gate renforce | M | BL-018D | DONE |
 | BL-018F | P5 | Observabilite minimale exploitable (alert policy + drill) | S | BL-018C | DONE |
+| BL-017R | P5 | Revalidation finale metier mode API + offline replay | M | BL-017, BL-018F, Lot5 tech | DONE |
+| BL-018G | P5 | Final cleanup and consistency pass (docs/repo/e2e determinism) | S | BL-018F | DONE |
 
 ## Prochaine Action Recommandee
-- Finaliser la cloture documentaire BL-018 et cadrer BL-019 (monitoring GitHub active + prepa prod), puis lancer execution quand staging public est disponible.
+- Demarrer BL-019 (monitoring GitHub active + prepa pre-prod).

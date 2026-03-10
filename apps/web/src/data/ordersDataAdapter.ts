@@ -1,17 +1,58 @@
-import { MOCK_ORDERS } from '../constants';
+﻿import { MOCK_ORDERS } from '../constants';
 import { DailySession, Order } from '../types';
-import { getApiBaseUrl, getDataSourceMode } from './config';
+import { getDataSourceMode } from './config';
 import { readJsonFromStorage, writeJsonToStorage } from './localStorage';
 import { setDomainDataSourceStatus } from './sourceStatus';
+import { authenticatedApiFetch } from './apiAuth';
+import {
+  createOfflineOperation,
+  enqueueOfflineOperation,
+  LocalStorageOfflineQueueStore,
+  OfflineOperation,
+  replayOfflineQueue,
+} from './offlineQueue';
 
 const ORDERS_KEY = 'molls_orders';
 const CURRENT_SESSION_KEY = 'molls_current_session';
 const SESSIONS_HISTORY_KEY = 'molls_sessions_history';
+const offlineQueueStore = new LocalStorageOfflineQueueStore();
 
 export interface OrdersState {
   orders: Order[];
   currentSession: DailySession | null;
   sessionsHistory: DailySession[];
+}
+
+export interface CreateOrderWritePayload {
+  items: Array<{
+    productId: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    variantName?: string;
+    isRedeemed?: boolean;
+    redeemedPoints?: number;
+  }>;
+  total: number;
+  paymentMethod: 'CASH' | 'CARD' | 'TR';
+  serviceMode: 'TAKEAWAY' | 'DINE_IN';
+  customerId?: string;
+}
+
+export interface OpenSessionWritePayload {
+  initialCash: number;
+  startTime?: number;
+}
+
+export interface CloseSessionWritePayload {
+  sessionId?: string;
+  finalCash: number;
+  endTime?: number;
+  expectedTotals?: {
+    totalSales?: number;
+    ordersCount?: number;
+    totalExpenses?: number;
+  };
 }
 
 function safeNumber(value: unknown, fallback: number): number {
@@ -158,8 +199,8 @@ export function getLocalOrdersState(): OrdersState {
   };
 }
 
-async function fetchOrdersFromApi(): Promise<Order[]> {
-  const response = await fetch(`${getApiBaseUrl()}/orders`);
+async function fetchOrdersFromApi(pin?: string): Promise<Order[]> {
+  const response = await authenticatedApiFetch('/orders', {}, pin);
   if (!response.ok) {
     throw new Error(`Failed to fetch orders from API (${response.status})`);
   }
@@ -168,29 +209,69 @@ async function fetchOrdersFromApi(): Promise<Order[]> {
   return list.map((item, index) => sanitizeOrder(item, index));
 }
 
-export async function loadOrdersState(): Promise<OrdersState> {
+async function fetchSessionsFromApiAuthenticated(
+  pin?: string,
+): Promise<{
+  currentSession: DailySession | null;
+  sessionsHistory: DailySession[];
+}> {
+  const [currentRes, historyRes] = await Promise.all([
+    authenticatedApiFetch('/sessions/current', {}, pin),
+    authenticatedApiFetch('/sessions', {}, pin),
+  ]);
+
+  if (!currentRes.ok) {
+    throw new Error(`Failed to fetch current session from API (${currentRes.status})`);
+  }
+  if (!historyRes.ok) {
+    throw new Error(`Failed to fetch sessions history from API (${historyRes.status})`);
+  }
+
+  const currentRaw = (await currentRes.json()) as Partial<DailySession> | null;
+  const historyRaw = (await historyRes.json()) as Array<Partial<DailySession>>;
+
+  return {
+    currentSession: currentRaw ? sanitizeDailySession(currentRaw, 0) : null,
+    sessionsHistory: (Array.isArray(historyRaw) ? historyRaw : []).map((item, index) =>
+      sanitizeDailySession(item, index),
+    ),
+  };
+}
+
+export async function loadOrdersState(pin?: string): Promise<OrdersState> {
   const local = getLocalOrdersState();
   if (getDataSourceMode() === 'api') {
     try {
-      const apiOrders = await fetchOrdersFromApi();
-      if (apiOrders.length > 0 || local.orders.length === 0) {
-        const next: OrdersState = {
-          ...local,
-          orders: apiOrders,
-        };
-        writeJsonToStorage(ORDERS_KEY, next.orders);
-        setDomainDataSourceStatus('orders', 'api');
-        return next;
-      }
-      setDomainDataSourceStatus('orders', 'fallback');
-      return local;
+      const [apiOrders, apiSessions] = await Promise.all([
+        fetchOrdersFromApi(pin),
+        fetchSessionsFromApiAuthenticated(pin),
+      ]);
+
+      const next: OrdersState = {
+        orders: apiOrders.length > 0 || local.orders.length === 0 ? apiOrders : local.orders,
+        currentSession: apiSessions.currentSession ?? local.currentSession,
+        sessionsHistory:
+          apiSessions.sessionsHistory.length > 0 || local.sessionsHistory.length === 0
+            ? apiSessions.sessionsHistory
+            : local.sessionsHistory,
+      };
+
+      writeJsonToStorage(ORDERS_KEY, next.orders);
+      writeJsonToStorage(CURRENT_SESSION_KEY, next.currentSession);
+      writeJsonToStorage(SESSIONS_HISTORY_KEY, next.sessionsHistory);
+
+      setDomainDataSourceStatus('orders', 'api');
+      setDomainDataSourceStatus('sessions', 'api');
+      return next;
     } catch {
       setDomainDataSourceStatus('orders', 'fallback');
+      setDomainDataSourceStatus('sessions', 'fallback');
       return local;
     }
   }
 
   setDomainDataSourceStatus('orders', 'local');
+  setDomainDataSourceStatus('sessions', 'local');
   return local;
 }
 
@@ -198,4 +279,172 @@ export async function saveOrdersState(state: OrdersState): Promise<void> {
   writeJsonToStorage(ORDERS_KEY, state.orders);
   writeJsonToStorage(CURRENT_SESSION_KEY, state.currentSession);
   writeJsonToStorage(SESSIONS_HISTORY_KEY, state.sessionsHistory);
+}
+
+async function executeOrderOfflineOperation(
+  operation: OfflineOperation<CreateOrderWritePayload>,
+  pin?: string,
+): Promise<void> {
+  const response = await authenticatedApiFetch(
+    '/orders',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        ...operation.payload,
+        idempotencyKey: operation.operationId,
+      }),
+    },
+    pin,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to create order via API (${response.status})`);
+  }
+}
+
+async function executeSessionOfflineOperation(
+  operation: OfflineOperation<OpenSessionWritePayload | CloseSessionWritePayload>,
+  pin?: string,
+): Promise<void> {
+  if (operation.action === 'open_session') {
+    const response = await authenticatedApiFetch(
+      '/sessions/open',
+      {
+        method: 'POST',
+        body: JSON.stringify(operation.payload),
+      },
+      pin,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to open session via API (${response.status})`);
+    }
+    return;
+  }
+
+  if (operation.action === 'close_session') {
+    const response = await authenticatedApiFetch(
+      '/sessions/close',
+      {
+        method: 'POST',
+        body: JSON.stringify(operation.payload),
+      },
+      pin,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to close session via API (${response.status})`);
+    }
+    return;
+  }
+
+  throw new Error(`Unsupported session action: ${operation.action}`);
+}
+
+export async function writeOrderApiFirstOrQueue(
+  payload: CreateOrderWritePayload,
+  pin?: string,
+): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
+  if (getDataSourceMode() !== 'api') {
+    setDomainDataSourceStatus('orders', 'local');
+    return { queued: false, synced: false, operationId: 'local-mode' };
+  }
+
+  const operation = createOfflineOperation({
+    domain: 'orders',
+    action: 'create_order',
+    payload,
+  });
+
+  try {
+    await executeOrderOfflineOperation(operation, pin);
+    setDomainDataSourceStatus('orders', 'api');
+    return { queued: false, synced: true, operationId: operation.operationId };
+  } catch {
+    await enqueueOfflineOperation(offlineQueueStore, operation);
+    setDomainDataSourceStatus('orders', 'fallback');
+    return { queued: true, synced: false, operationId: operation.operationId };
+  }
+}
+
+export async function writeSessionOpenApiFirstOrQueue(
+  payload: OpenSessionWritePayload,
+  pin?: string,
+): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
+  if (getDataSourceMode() !== 'api') {
+    setDomainDataSourceStatus('sessions', 'local');
+    return { queued: false, synced: false, operationId: 'local-mode' };
+  }
+
+  const operation = createOfflineOperation({
+    domain: 'sessions',
+    action: 'open_session',
+    payload,
+  });
+
+  try {
+    await executeSessionOfflineOperation(operation, pin);
+    setDomainDataSourceStatus('sessions', 'api');
+    return { queued: false, synced: true, operationId: operation.operationId };
+  } catch {
+    await enqueueOfflineOperation(offlineQueueStore, operation);
+    setDomainDataSourceStatus('sessions', 'fallback');
+    return { queued: true, synced: false, operationId: operation.operationId };
+  }
+}
+
+export async function writeSessionCloseApiFirstOrQueue(
+  payload: CloseSessionWritePayload,
+  pin?: string,
+): Promise<{ queued: boolean; synced: boolean; operationId: string }> {
+  if (getDataSourceMode() !== 'api') {
+    setDomainDataSourceStatus('sessions', 'local');
+    return { queued: false, synced: false, operationId: 'local-mode' };
+  }
+
+  const operation = createOfflineOperation({
+    domain: 'sessions',
+    action: 'close_session',
+    payload,
+  });
+
+  try {
+    await executeSessionOfflineOperation(operation, pin);
+    setDomainDataSourceStatus('sessions', 'api');
+    return { queued: false, synced: true, operationId: operation.operationId };
+  } catch {
+    await enqueueOfflineOperation(offlineQueueStore, operation);
+    setDomainDataSourceStatus('sessions', 'fallback');
+    return { queued: true, synced: false, operationId: operation.operationId };
+  }
+}
+
+export async function replayPendingOrderWrites(pin?: string): Promise<void> {
+  if (getDataSourceMode() !== 'api') return;
+
+  const report = await replayOfflineQueue(offlineQueueStore, async (operation) => {
+    if (operation.domain === 'orders' && operation.action === 'create_order') {
+      await executeOrderOfflineOperation(
+        operation as OfflineOperation<CreateOrderWritePayload>,
+        pin,
+      );
+      return;
+    }
+
+    if (operation.domain === 'sessions') {
+      await executeSessionOfflineOperation(
+        operation as OfflineOperation<OpenSessionWritePayload | CloseSessionWritePayload>,
+        pin,
+      );
+    }
+  });
+
+  if (report.attempted === 0) return;
+
+  if (report.failed > 0) {
+    setDomainDataSourceStatus('orders', 'fallback');
+    setDomainDataSourceStatus('sessions', 'fallback');
+    return;
+  }
+
+  setDomainDataSourceStatus('orders', 'api');
+  setDomainDataSourceStatus('sessions', 'api');
 }

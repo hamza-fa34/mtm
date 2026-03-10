@@ -36,8 +36,11 @@ Fournir une procedure courte pour diagnostiquer et contenir un incident producti
 
 ## Containment
 - Si API indisponible:
-  1. Repasser frontend en `VITE_DATA_SOURCE=local`.
-  2. Redemarrer `api` + `db`.
+  1. Garder `VITE_DATA_SOURCE=api` (mode nominal) pour conserver le buffer offline + replay.
+  2. Verifier que les operations critiques continuent en mode degrade (`Data: fallback`).
+  3. Redemarrer `api` + `db`.
+  4. Verifier la reprise du replay a la reconnexion.
+  5. Utiliser `VITE_DATA_SOURCE=local` uniquement en dernier recours (mode legacy temporaire).
 - Si erreurs `429 Too Many Requests`:
   1. Verifier `RATE_LIMIT_WINDOW_MS` et `RATE_LIMIT_MAX_REQUESTS`.
   2. Ajuster en environnement non-prod si charge de test elevee.

@@ -1,7 +1,7 @@
 export type DataSourceMode = 'local' | 'api';
 
 export function getDataSourceMode(): DataSourceMode {
-  const raw = (import.meta.env.VITE_DATA_SOURCE ?? 'local').toString().toLowerCase();
+  const raw = (import.meta.env.VITE_DATA_SOURCE ?? 'api').toString().toLowerCase();
   return raw === 'api' ? 'api' : 'local';
 }
 

@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Search, Plus, ShoppingCart, CreditCard, Banknote, Ticket, Truck, UtensilsCrossed, Gift, X, AlertTriangle } from 'lucide-react';
+import { Search, Plus, ShoppingCart, CreditCard, Banknote, Truck, UtensilsCrossed, Gift, X, AlertTriangle } from 'lucide-react';
 import { Product, CartItem, ServiceMode, PaymentMethod, Variant } from '../types';
 import { calculerTotaux, formatPrix } from '../utils';
 
