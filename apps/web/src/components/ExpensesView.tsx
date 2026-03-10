@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Receipt, Plus, Search, Trash2, Calendar, Camera, Filter, PieChart, ArrowDownCircle, Wallet, X } from 'lucide-react';
+import { Plus, Search, Trash2, ArrowDownCircle } from 'lucide-react';
 import { formatPrix, formatDate, downloadCSV } from '../utils';
 import { Expense } from '../types';
 

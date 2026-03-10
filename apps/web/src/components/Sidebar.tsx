@@ -17,22 +17,6 @@ import { useInventory } from '../contexts/InventoryContext';
 import { useDataSourceStatus } from '../data/useDataSourceStatus';
 import logo from '../assets/logo.png';
 
-type LogoIconProps = {
-  size?: number;
-  className?: string;
-  strokeWidth?: number;
-};
-
-const BrandLogoIcon: React.FC<LogoIconProps> = ({ size = 20, className }) => (
-  <img
-    src={logo}
-    alt="Molly's Truck logo"
-    width={size}
-    height={size}
-    className={`rounded-md object-cover ${className ?? ''}`}
-  />
-);
-
 const Sidebar: React.FC = () => {
   const {
     currentView,

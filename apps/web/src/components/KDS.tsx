@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Clock, CheckCircle, AlertCircle, Utensils, Ticket } from 'lucide-react';
+import { Clock, CheckCircle, Utensils } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import logo from '../assets/logo.png';

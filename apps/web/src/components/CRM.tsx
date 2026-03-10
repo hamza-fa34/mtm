@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Users, UserPlus, Search, Gift, History, Star, Phone, Mail, Calendar, X, Save } from 'lucide-react';
+import { UserPlus, Search, Gift, History, Star, Phone, Mail, X, Save } from 'lucide-react';
 import { Customer } from '../types';
 import { formatDate } from '../utils';
 
